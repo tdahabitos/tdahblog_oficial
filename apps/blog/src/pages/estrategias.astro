@@ -1,0 +1,95 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Estratégias | VivaTDAH";
+const description =
+  "Estratégias práticas para TDAH: foco, rotina, procrastinação, planejamento, ambiente, suporte e execução com menos atrito.";
+
+const clusters = [
+  { title: "Foco e atenção", description: "Como entrar, manter e sair do foco com menos custo.", href: "/post/foco-e-rotina" },
+  { title: "Procrastinação", description: "O que está por trás e como destravar por etapas.", href: "/post/procrastinacao" },
+  { title: "Rotina mínima", description: "Estruturas pequenas que seguram o dia de pé.", href: "/post/rotina-minima" },
+  { title: "Planejamento realista", description: "Tempo subjetivo, previsibilidade e limites.", href: "/post/planejamento-realista" },
+  { title: "Ambiente e gatilhos", description: "Design do ambiente para reduzir atrito e distração.", href: "/post/ambiente" },
+  { title: "Apoio e scaffolding", description: "Ferramentas externas e apoio humano que funcionam.", href: "/post/scaffolding" },
+];
+
+const curated = [
+  { title: "Estratégias reais para foco e rotina", excerpt: "Ferramentas práticas para organizar o dia sem se esgotar.", href: "/post/foco-e-rotina" },
+  { title: "Procrastinação no TDAH", excerpt: "Não é preguiça. É fricção, emoção e energia.", href: "/post/procrastinacao" },
+  { title: "Planejamento realista", excerpt: "Como parar de prometer um dia que não existe.", href: "/post/planejamento-realista" },
+];
+
+const faq = [
+  { q: "Qual a estratégia mais importante?", a: "A que você consegue sustentar. Estratégia boa é repetível. Se só funciona em dia perfeito, não é estratégia, é sorte." },
+  { q: "Como eu paro de começar e não terminar?", a: "Reduza o tamanho da primeira ação, crie checkpoints e feche ciclos. Terminar pequeno todos os dias é melhor que começar grande e colapsar." },
+  { q: "Ferramenta resolve?", a: "Ferramenta ajuda, mas o motor é desenho do ambiente + suporte + ritmo. App sem sistema vira cobrança." },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="richtext-wrapper">
+    <h1>Estratégias</h1>
+    <p class="muted">
+      Estratégias aqui são desenho de sistema. Menos “dica”, mais método: ambiente, sequência, energia e suporte.
+    </p>
+
+    <hr />
+
+    <h2>Clusters principais</h2>
+    <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+      {clusters.map((c) => (
+        <a class="ds-card" href={c.href} style="padding: 14px; text-decoration:none;">
+          <strong style="display:block; margin-bottom:6px;">{c.title}</strong>
+          <span class="ds-muted" style="display:block; line-height:1.5;">{c.description}</span>
+        </a>
+      ))}
+    </div>
+
+    <style>
+      @media (max-width: 760px) {
+        div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+      }
+    </style>
+
+    <hr />
+
+    <h2>Leituras recomendadas</h2>
+    <div style="display:grid; gap: 12px;">
+      {curated.map((p) => (
+        <div class="ds-card">
+          <div class="ds-card-body">
+            <h3 style="margin:0 0 6px 0;">{p.title}</h3>
+            <p class="ds-muted" style="margin:0 0 12px 0;">{p.excerpt}</p>
+            <a class="ds-btn ds-btn-outline" href={p.href} style="width:auto;">Ler agora</a>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <hr />
+
+    <div class="ds-card ds-card--feature">
+      <div class="ds-card-body">
+        <div class="ds-badge">Ferramentas</div>
+        <h2 style="margin-top: 12px;">Quer trilhas guiadas por objetivo?</h2>
+        <p class="ds-muted">
+          Se você quer um caminho prático (com começo, meio e fim), vá para Trilhas.
+        </p>
+        <a class="ds-btn ds-btn-primary" href="/trilhas" style="max-width: 260px;">
+          Ver trilhas
+        </a>
+      </div>
+    </div>
+
+    <hr />
+
+    <h2>FAQ</h2>
+    {faq.map((item) => (
+      <details class="ds-card" style="padding: 14px; margin-bottom: 10px;">
+        <summary style="cursor:pointer; font-weight: 700;">{item.q}</summary>
+        <p class="ds-muted" style="margin: 10px 0 0 0;">{item.a}</p>
+      </details>
+    ))}
+  </div>
+</BaseLayout>

@@ -1,0 +1,355 @@
+---
+import Head from "../components/head.astro";
+import "../styles/tdahblog.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  hideFooter?: boolean;
+
+  // ✅ SEO técnico + Social (Parte 7)
+  canonical?: string;
+  ogImage?: string;
+  ogType?: "website" | "article";
+  noindex?: boolean;
+}
+
+const {
+  title = "VivaTDAH",
+  description = "Conteúdo informativo e acessível sobre TDAH",
+  hideFooter = false,
+
+  canonical,
+  ogImage,
+  ogType = "website",
+  noindex = false,
+} = Astro.props as Props;
+---
+
+<!DOCTYPE html>
+<html lang="pt-br">
+  <Head
+    title={title}
+    description={description}
+    canonical={canonical}
+    ogImage={ogImage}
+    ogType={ogType}
+    noindex={noindex}
+  />
+
+  <body>
+    <!-- Aplica tema ANTES de renderizar (evita “flash”) -->
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem("theme");
+        if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+        if (saved === "light") document.documentElement.removeAttribute("data-theme");
+      } catch {}
+    </script>
+
+    <style>
+      :root {
+        --lav-050: #ddd6ff;
+        --lav-300: #8371cd;
+        --lav-500: #6e42a7;
+        --lav-700: #4d398c;
+        --sun-400: #f6e541;
+
+        --topbar-bg: #0b0b0c;
+        --topbar-border: rgba(221, 214, 255, 0.16);
+
+        --brand-color: #ffffff;
+
+        --pill-bg: rgba(110, 66, 167, 0.22);
+        --pill-border: rgba(221, 214, 255, 0.34);
+        --pill-text: rgba(255, 255, 255, 0.96);
+
+        --pill-bg-hover: rgba(110, 66, 167, 0.35);
+        --pill-border-hover: rgba(246, 229, 65, 0.70);
+
+        --menu-bg: #120f1d;
+        --menu-border: rgba(221, 214, 255, 0.18);
+        --menu-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+
+        --menu-item: rgba(255, 255, 255, 0.92);
+        --menu-item-hover: rgba(221, 214, 255, 0.10);
+
+        --focus-ring: rgba(246, 229, 65, 0.95);
+      }
+
+      html[data-theme="dark"] {
+        --topbar-bg: #070708;
+        --topbar-border: rgba(221, 214, 255, 0.14);
+
+        --pill-bg: rgba(77, 57, 140, 0.28);
+        --pill-border: rgba(221, 214, 255, 0.32);
+        --pill-bg-hover: rgba(77, 57, 140, 0.44);
+        --pill-border-hover: rgba(246, 229, 65, 0.75);
+
+        --menu-bg: #0d0b12;
+        --menu-border: rgba(221, 214, 255, 0.16);
+      }
+
+      body { margin: 0; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--topbar-bg);
+        border-bottom: 1px solid var(--topbar-border);
+        overflow: visible;
+      }
+
+      .topbar-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 18px;
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        overflow: visible;
+      }
+
+      .brand {
+        color: var(--brand-color);
+        text-decoration: none;
+        font-weight: 750;
+        letter-spacing: -0.02em;
+        font-size: 1.15rem;
+        flex: 0 0 auto;
+        line-height: 1;
+      }
+
+      .topbar-inner .nav{
+        margin-left: auto;
+        width: max-content;
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+        flex-wrap: nowrap;
+        overflow: visible;
+      }
+
+      .topbar-inner .nav .nav-link{
+        white-space: nowrap;
+      }
+
+      .nav-link {
+        appearance: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        width: auto;
+        min-width: 0;
+        white-space: nowrap;
+
+        border: 1px solid var(--pill-border);
+        background: var(--pill-bg);
+        color: var(--pill-text);
+
+        padding: 6px 12px;
+        font-size: 0.92rem;
+        font-weight: 650;
+        line-height: 1;
+
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .nav-link:hover {
+        background: var(--pill-bg-hover);
+        border-color: var(--pill-border-hover);
+      }
+
+      .nav-link:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 3px;
+      }
+
+      .nav-trigger .chev {
+        font-size: 0.7rem;
+        opacity: 0.9;
+        transform: translateY(1px);
+      }
+
+      .dropdown {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        background: transparent;
+        border: none;
+        padding: 0;
+        border-radius: 0;
+        overflow: visible;
+      }
+
+      .menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        z-index: 999;
+
+        min-width: 220px;
+        background: var(--menu-bg);
+        border: 1px solid var(--menu-border);
+        border-radius: 10px;
+        padding: 6px;
+
+        display: none;
+        box-shadow: var(--menu-shadow);
+      }
+
+      .menu a {
+        display: block;
+        width: 100%;
+        border: none;
+        background: transparent;
+
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-weight: 650;
+        color: var(--menu-item);
+        text-decoration: none;
+        line-height: 1.15;
+      }
+
+      .menu a:hover {
+        background: var(--menu-item-hover);
+      }
+
+      .menu a:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+      }
+
+      .dropdown[data-open="true"] .menu {
+        display: block;
+      }
+
+      @media (max-width: 740px) {
+        .topbar-inner {
+          align-items: flex-start;
+          padding: 8px 18px;
+          min-height: 0;
+        }
+        .topbar-inner .nav {
+          flex-wrap: wrap;
+          justify-content: flex-start;
+        }
+      }
+    </style>
+
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/">VivaTDAH</a>
+
+        <nav class="nav" aria-label="Navegação principal">
+          <a class="nav-link" href="/">Início</a>
+
+          <div class="dropdown" data-dropdown>
+            <button
+              class="nav-link nav-trigger"
+              type="button"
+              data-trigger
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Seções <span class="chev">▼</span>
+            </button>
+
+            <div class="menu" role="menu">
+              <a role="menuitem" href="/comece-aqui">Comece aqui</a>
+              <a role="menuitem" href="/diagnostico">Diagnóstico</a>
+              <a role="menuitem" href="/regulacao">Regulação</a>
+              <a role="menuitem" href="/estrategias">Estratégias</a>
+              <a role="menuitem" href="/ciencia">Ciência</a>
+              <a role="menuitem" href="/recursos">Recursos</a>
+            </div>
+          </div>
+
+          <a class="nav-link" href="/sobre">Sobre</a>
+
+          <div class="dropdown" data-dropdown>
+            <button
+              class="nav-link nav-trigger"
+              type="button"
+              data-trigger
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Extras <span class="chev">▼</span>
+            </button>
+
+            <div class="menu" role="menu">
+              <a role="menuitem" href="/categorias">Categorias</a>
+              <a role="menuitem" href="/trilhas">Trilhas</a>
+              <a role="menuitem" href="/sobre">Sobre</a>
+              <a role="menuitem" href="/projetos">Outros projetos</a>
+            </div>
+          </div>
+
+          <button class="nav-link" type="button" id="themeToggle" aria-label="Alternar tema">
+            Alternar tema
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="w-full flex-1">
+      <slot />
+    </main>
+
+    {!hideFooter && (
+      <footer>
+        <div style="max-width: var(--layout-containerMax); margin: 0 auto; padding: 28px 32px; font-size: .9rem; color: var(--color-text-secondary);">
+          © {new Date().getFullYear()} VivaTDAH — Todos os direitos reservados
+        </div>
+      </footer>
+    )}
+
+    <script is:inline>
+      // Dropdown toggle
+      const dropdowns = document.querySelectorAll("[data-dropdown]");
+      dropdowns.forEach((dd) => {
+        const btn = dd.querySelector("[data-trigger]");
+        const close = () => {
+          dd.dataset.open = "false";
+          btn?.setAttribute("aria-expanded", "false");
+        };
+        const open = () => {
+          dd.dataset.open = "true";
+          btn?.setAttribute("aria-expanded", "true");
+        };
+
+        btn?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dd.dataset.open === "true" ? close() : open();
+        });
+
+        document.addEventListener("click", close);
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") close();
+        });
+      });
+
+      // Tema persistente (data-theme="dark")
+      const toggle = document.getElementById("themeToggle");
+      toggle?.addEventListener("click", () => {
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        if (isDark) {
+          document.documentElement.removeAttribute("data-theme");
+          try { localStorage.setItem("theme", "light"); } catch {}
+        } else {
+          document.documentElement.setAttribute("data-theme", "dark");
+          try { localStorage.setItem("theme", "dark"); } catch {}
+        }
+      });
+    </script>
+  </body>
+</html>

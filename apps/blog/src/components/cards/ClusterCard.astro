@@ -1,0 +1,7 @@
+---
+const { title, desc, href } = Astro.props as { title: string; desc?: string; href: string }
+---
+<a class="ds-card" href={href} style="display:block;padding:16px;text-decoration:none;">
+  <div style="font-weight:750;margin:0 0 6px 0;">{title}</div>
+  {desc && <div class="ds-muted" style="margin:0;">{desc}</div>}
+</a>

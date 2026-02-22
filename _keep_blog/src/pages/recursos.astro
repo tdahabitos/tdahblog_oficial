@@ -1,0 +1,104 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Recursos | VivaTDAH";
+const description =
+  "Recursos práticos para TDAH: guias, checklists, ferramentas, livros, aplicativos e caminhos de suporte para vida real.";
+
+const clusters = [
+  { title: "Checklists e guias", description: "Modelos simples para reduzir fricção e decisão.", href: "/post/checklists" },
+  { title: "Ferramentas e apps", description: "O que ajuda de verdade e como usar sem virar cobrança.", href: "/post/ferramentas-apps" },
+  { title: "Livros e leituras", description: "Curadoria sem exagero, com foco em utilidade.", href: "/post/livros" },
+  { title: "Trabalho e estudo", description: "Acomodações, rotina e organização prática.", href: "/post/trabalho-estudo" },
+  { title: "Família e relacionamentos", description: "Comunicação, limites e apoio sem briga.", href: "/post/familia-relacoes" },
+  { title: "Quando buscar ajuda", description: "Sinais de alerta e caminhos possíveis.", href: "/post/quando-buscar-ajuda" },
+];
+
+const curated = [
+  { title: "Checklist de consulta", excerpt: "Leve clareza para sua avaliação e economize energia.", href: "/post/checklist-consulta" },
+  { title: "Ferramentas e apps para TDAH", excerpt: "Como escolher e usar sem virar peso.", href: "/post/ferramentas-apps" },
+  { title: "Trilhas guiadas", excerpt: "Se você quer um caminho estruturado por objetivo.", href: "/trilhas" },
+];
+
+const faq = [
+  { q: "Vocês recomendam apps específicos?", a: "A ideia aqui é recomendar por função (captura, lembrete, rotina, execução) e não por modinha. O melhor app é o que você sustenta." },
+  { q: "Tenho pouco tempo. O que pego primeiro?", a: "Checklist de consulta (se você está em avaliação), ou Trilha de Regulação (se você está exausta), ou Estratégias (se o problema é execução)." },
+  { q: "Isso substitui tratamento?", a: "Não. Recursos ajudam, mas não substituem acompanhamento profissional quando necessário." },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="richtext-wrapper">
+    <h1>Recursos</h1>
+    <p class="muted">
+      Recursos aqui são para vida real: guias, checklists, ferramentas e caminhos de suporte.
+      O objetivo é reduzir atrito e te deixar mais funcional, não mais informada.
+    </p>
+
+    <hr />
+
+    <h2>O que você encontra aqui</h2>
+    <ul>
+      <li>Checklists e modelos simples.</li>
+      <li>Ferramentas por função (não por hype).</li>
+      <li>Leituras e trilhas guiadas por objetivo.</li>
+      <li>Orientações para família, trabalho e estudo.</li>
+    </ul>
+
+    <h2>Clusters principais</h2>
+    <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+      {clusters.map((c) => (
+        <a class="ds-card" href={c.href} style="padding: 14px; text-decoration:none;">
+          <strong style="display:block; margin-bottom:6px;">{c.title}</strong>
+          <span class="ds-muted" style="display:block; line-height:1.5;">{c.description}</span>
+        </a>
+      ))}
+    </div>
+
+    <style>
+      @media (max-width: 760px) {
+        div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+      }
+    </style>
+
+    <hr />
+
+    <h2>Recomendados</h2>
+    <div style="display:grid; gap: 12px;">
+      {curated.map((p) => (
+        <div class="ds-card">
+          <div class="ds-card-body">
+            <h3 style="margin:0 0 6px 0;">{p.title}</h3>
+            <p class="ds-muted" style="margin:0 0 12px 0;">{p.excerpt}</p>
+            <a class="ds-btn ds-btn-outline" href={p.href} style="width:auto;">Abrir</a>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <hr />
+
+    <div class="ds-card ds-card--feature">
+      <div class="ds-card-body">
+        <div class="ds-badge">Atalho</div>
+        <h2 style="margin-top: 12px;">Quer um caminho guiado por tema?</h2>
+        <p class="ds-muted">
+          Trilhas organizam conteúdo por objetivo, com sequência e checkpoints.
+        </p>
+        <a class="ds-btn ds-btn-primary" href="/trilhas" style="max-width: 260px;">
+          Ver trilhas
+        </a>
+      </div>
+    </div>
+
+    <hr />
+
+    <h2>FAQ</h2>
+    {faq.map((item) => (
+      <details class="ds-card" style="padding: 14px; margin-bottom: 10px;">
+        <summary style="cursor:pointer; font-weight: 700;">{item.q}</summary>
+        <p class="ds-muted" style="margin: 10px 0 0 0;">{item.a}</p>
+      </details>
+    ))}
+  </div>
+</BaseLayout>

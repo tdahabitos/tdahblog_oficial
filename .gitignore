@@ -1,0 +1,13 @@
+﻿# env (NUNCA versionar)
+.env
+.env.*
+!.env.example
+
+# deps/build/vercel
+node_modules/
+dist/
+.vercel/
+.astro/
+
+# logs
+*.log

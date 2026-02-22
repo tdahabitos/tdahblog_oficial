@@ -1,0 +1,76 @@
+﻿---
+const { slug } = Astro.props as { slug: string };
+---
+
+<section class="ds-card" style="padding:16px; margin-top:14px;" data-comments data-slug={slug}>
+  <h3 style="margin:0 0 10px 0;">Comentários</h3>
+
+  <form data-comment-form style="display:grid; gap:10px; margin-bottom:12px;">
+    <input name="name" placeholder="Seu nome" required minlength="2" maxlength="60" />
+    <textarea name="body" placeholder="Seu comentário" required minlength="3" maxlength="1200" rows="4"></textarea>
+    <button class="ds-btn ds-btn-primary" type="submit">Enviar</button>
+    <div class="ds-muted" data-comment-status></div>
+  </form>
+
+  <div data-comment-list class="ds-muted">Carregando…</div>
+</section>
+
+<script is:inline>
+  (async () => {
+    const root = document.querySelector('[data-comments][data-slug="${slug}"]');
+    if (!root) return;
+
+    const slug = root.getAttribute("data-slug");
+    const list = root.querySelector("[data-comment-list]");
+    const form = root.querySelector("[data-comment-form]");
+    const status = root.querySelector("[data-comment-status]");
+
+    function esc(s){ return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    async function load() {
+      const r = await fetch(`/api/comment?slug=${encodeURIComponent(slug)}`);
+      const j = await r.json();
+      const items = j.items || [];
+      if (!items.length) {
+        list.innerHTML = '<div class="ds-muted">Ainda não tem comentários.</div>';
+        return;
+      }
+      list.innerHTML = items.map((it) => `
+        <div style="padding:10px 0; border-top:1px solid rgba(221,214,255,.14);">
+          <div style="font-weight:700;">${esc(it.name)}</div>
+          <div style="opacity:.9; margin-top:4px; white-space:pre-wrap;">${esc(it.body)}</div>
+        </div>
+      `).join("");
+    }
+
+    await load();
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.textContent = "Enviando…";
+
+      const fd = new FormData(form);
+      const payload = {
+        slug,
+        name: String(fd.get("name") || ""),
+        body: String(fd.get("body") || ""),
+      };
+
+      const r = await fetch("/api/comment", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const j = await r.json();
+      if (!r.ok || j.error) {
+        status.textContent = "Erro: " + (j.error || "falha ao enviar");
+        return;
+      }
+
+      form.reset();
+      status.textContent = "Comentário enviado.";
+      await load();
+    });
+  })();
+</script>

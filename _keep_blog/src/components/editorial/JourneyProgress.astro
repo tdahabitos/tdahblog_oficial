@@ -1,0 +1,18 @@
+---
+const { journey } = Astro.props
+---
+
+<section>
+  {journey.stages.map(stage => (
+    <div>
+      <h3>{stage.title}</h3>
+      <ul>
+        {stage.posts.map(slug => (
+          <li>
+            <a href={`/post/${slug}`}>{slug}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</section>

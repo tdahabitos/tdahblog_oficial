@@ -1,0 +1,15 @@
+﻿---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="VivaTDAH" description="Conteúdo informativo e acessível sobre TDAH">
+  <script is:inline>
+    window.location.replace("/comece-aqui");
+  </script>
+
+  <noscript>
+    <p style="padding:16px">
+      Vá para <a href="/comece-aqui">Comece aqui</a>.
+    </p>
+  </noscript>
+</BaseLayout>

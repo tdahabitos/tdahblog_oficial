@@ -1,0 +1,10 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPostsByAuthor, getAuthorBySlug } from "../../services/api";
+
+const { slug } = Astro.params;
+if (!slug) throw new Error("Missing author slug");
+
+const author = await getAuthorBySlug(slug);
+const posts = await getPostsByAuthor(slug);
+---

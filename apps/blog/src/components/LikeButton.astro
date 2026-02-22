@@ -1,0 +1,36 @@
+﻿---
+const { slug } = Astro.props as { slug: string };
+---
+
+<button class="ds-btn ds-btn-outline" data-like data-slug={slug}>
+  👍 <span data-like-count>0</span>
+</button>
+
+<script is:inline>
+  (async () => {
+    const btn = document.querySelector('[data-like][data-slug="${slug}"]');
+    if (!btn) return;
+    const slug = btn.getAttribute("data-slug");
+    const countEl = btn.querySelector("[data-like-count]");
+
+    async function refresh() {
+      const r = await fetch(`/api/like?slug=${encodeURIComponent(slug)}`);
+      const j = await r.json();
+      if (countEl) countEl.textContent = String(j.count ?? 0);
+    }
+
+    await refresh();
+
+    btn.addEventListener("click", async () => {
+      const r = await fetch("/api/like", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ slug }),
+      });
+      const j = await r.json();
+      if (countEl) countEl.textContent = String(j.count ?? 0);
+      // opcional: marca estado
+      btn.dataset.liked = j.liked ? "true" : "false";
+    });
+  })();
+</script>

@@ -1,0 +1,6 @@
+@'
+User-agent: *
+Allow: /
+
+Sitemap: https://tdah.blog/sitemap-index.xml
+'@ | Set-Content -LiteralPath ".\public\robots.txt" -Encoding UTF8

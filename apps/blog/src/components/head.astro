@@ -1,0 +1,99 @@
+---
+interface Props {
+  title?: string
+  description?: string
+  canonical?: string
+  ogImage?: string
+  ogType?: "website" | "article"
+  noindex?: boolean
+}
+
+const {
+  title = "VivaTDAH",
+  description = "Conteúdo informativo e acessível sobre TDAH",
+  canonical,
+  ogImage,
+  ogType = "website",
+  noindex = false,
+} = Astro.props as Props
+
+const canonicalUrl =
+  canonical ??
+  (Astro.site
+    ? new URL(Astro.url.pathname, Astro.site).toString()
+    : Astro.url.toString())
+
+const defaultOg = "/og-placeholder.jpg"
+const ogPath = ogImage || defaultOg
+const ogUrl =
+  /^https?:\/\//i.test(ogPath)
+    ? ogPath
+    : (Astro.site ? new URL(ogPath, Astro.site).toString() : ogPath)
+
+const robots = noindex ? "noindex,nofollow" : "index,follow"
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>{title}</title>
+  <meta name="description" content={description} />
+
+  <link rel="canonical" href={canonicalUrl} />
+  <meta name="robots" content={robots} />
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="VivaTDAH" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogUrl} />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogUrl} />
+
+  <!-- ✅ Base CSS (ordem importa) -->
+  <link rel="stylesheet" href="/assets/tdahblog/tokens.css" />
+  <link rel="stylesheet" href="/assets/tdahblog/tokens.dark.css" />
+  <link rel="stylesheet" href="/assets/tdahblog/global.css" />
+  <link rel="stylesheet" href="/assets/tdahblog/prose.css" />
+
+  <!-- ✅ Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    html {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--color-surface-0);
+      color: var(--color-text-primary);
+    }
+    body { margin: 0; }
+
+    header.topbar,
+    header.topbar .topbar-inner,
+    header.topbar nav.nav,
+    header.topbar .dropdown {
+      overflow: visible;
+    }
+
+    header.topbar .dropdown > .menu {
+      position: absolute;
+      z-index: 999;
+    }
+  </style>
+</head>

@@ -1,0 +1,8 @@
+---
+const { title, subtitle, note } = Astro.props as { title: string; subtitle?: string; note?: string };
+---
+<header class="ui-sectionhead">
+  <h2 class="ui-sectionhead__title">{title}</h2>
+  {subtitle && <p class="ui-sectionhead__subtitle">{subtitle}</p>}
+  {note && <p class="ui-sectionhead__note">{note}</p>}
+</header>

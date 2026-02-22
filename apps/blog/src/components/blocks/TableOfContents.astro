@@ -1,0 +1,16 @@
+---
+export type TocItem = { id: string; text: string; level: 2 | 3 };
+const { items, title = "Nesta página" } = Astro.props as { items: TocItem[]; title?: string };
+---
+{items?.length > 0 && (
+  <aside class="ui-toc" aria-label="Sumário">
+    <div class="ui-toc__title">{title}</div>
+    <ol class="ui-toc__list">
+      {items.map((it) => (
+        <li class={`ui-toc__item ui-toc__item--h${it.level}`}>
+          <a href={`#${it.id}`}>{it.text}</a>
+        </li>
+      ))}
+    </ol>
+  </aside>
+)}

@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { dateFormatter } from '../../lib/dayjs'
+import type { Post } from '../../types'
+import { apiFetcher } from '../../services/api'
+import { Frown } from 'lucide-react'
+import LazyImage from '../../components/lazy-image'
+import PostCard from "../../components/PostCard.astro";
+
+const { slug } = Astro.params
+
+const { posts, ...category } = await apiFetcher
+  .get(`/blog/categories/${slug}`)
+  .then((res) => res.data)
+---
+
+<BaseLayout
+  seo={{
+    title: category.title,
+    description: category.description,
+  }}
+>
+  <div class="space-y-2 mb-8">
+    <h1 class="text-3xl font-bold">{category?.title}</h1>
+    <p class="text-xs opacity-75">{category?.description}</p>
+  </div>
+
+  {
+    posts?.length === 0 && (
+      <div class="w-full card bg-white/10 shadow-sm">
+        <div class="p-4">
+          <div class="flex items-center justify-center gap-2">
+            <Frown />
+            <p>Nenhum post encontrado</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {
+      posts?.map((post: Post) => (
+        <div class="w-full card bg-white/10 shadow-sm">
+          <a href={`/post/${post.slug}`} class="bg-gray-200 rounded-t-2xl">
+            <LazyImage
+              client:load
+              className="!w-full !h-64 object-cover rounded-t-2xl"
+              src={post.cover.url}
+              alt={post.title}
+            />
+          </a>
+          <div class="card-body">
+            <div class="flex justify-between items-center gap-2">
+              <h2 class="card-title">{post.title}</h2>
+              <span class="text-xs">{dateFormatter(post.createdAt)}</span>
+            </div>
+            <p class="mb-2">{post.description}</p>
+            <div class="card-actions">
+              <a
+                class="w-full btn btn-primary rounded-lg"
+                href={`/post/${post.slug}`}
+              >
+                Ver mais
+              </a>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</BaseLayout>
