@@ -1,0 +1,15 @@
+@'
+---
+type Props = {
+  src: string
+  alt?: string
+  class?: string
+  width?: number | string
+  height?: number | string
+  loading?: "lazy" | "eager"
+  decoding?: "async" | "sync" | "auto"
+};
+const { src, alt = "", class: className = "", width, height, loading = "lazy", decoding = "async" } = Astro.props;
+---
+<img src={src} alt={alt} class={className} width={width} height={height} loading={loading} decoding={decoding} />
+'@ | Set-Content .\src\components\lazy-image.astro -Encoding UTF8

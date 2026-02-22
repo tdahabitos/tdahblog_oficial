@@ -666,3 +666,34 @@ export async function getPostsByAuthorPaged(
   }
   return getPostsByAuthorIdPaged(author.id, params)
 }
+// ======================================
+// Search helper (usado em /buscar)
+// ======================================
+export async function searchPosts(
+  query: string,
+  opts?: { limit?: number; page?: number; sort?: string }
+) {
+  const q = (query ?? "").trim().toLowerCase();
+  if (!q) return [];
+
+  // usa a mesma fonte de getPosts (Payload) e filtra local
+  const posts = await getPosts({
+    limit: opts?.limit ?? 200,
+    page: opts?.page ?? 1,
+    sort: opts?.sort ?? "-createdAt",
+  });
+
+  const hay = (p: any) =>
+    [
+      p?.title,
+      p?.description,
+      p?.hub,
+      p?.cluster,
+      ...(Array.isArray(p?.tags) ? p.tags : []),
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+  return posts.filter((p: any) => hay(p).includes(q));
+}

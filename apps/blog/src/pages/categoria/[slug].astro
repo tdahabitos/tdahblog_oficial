@@ -1,10 +1,10 @@
----
+﻿---
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import { dateFormatter } from '../../lib/dayjs'
 import type { Post } from '../../types'
 import { apiFetcher } from '../../services/api'
 import { Frown } from 'lucide-react'
-import LazyImage from '../../components/lazy-image'
+import LazyImage from '../../components/lazy-image.astro'
 import PostCard from "../../components/PostCard.astro";
 
 const { slug } = Astro.params
@@ -69,3 +69,4 @@ const { posts, ...category } = await apiFetcher
     }
   </div>
 </BaseLayout>
+

@@ -1,0 +1,15 @@
+﻿---
+const { items = [] } = Astro.props;
+const hrefOf = (i) => i.href ?? i.url ?? (i.id ? `#${i.id}` : "#");
+const textOf = (i) => i.text ?? i.title ?? i.label ?? "Seção";
+---
+{items && items.length ? (
+  <aside class="toc" aria-label="Sumário">
+    <div style="font-weight:700; margin:0 0 8px 0;">Conteúdo</div>
+    <ol style="margin:0; padding-left:18px; line-height:1.5;">
+      {items.map((i) => (
+        <li><a href={hrefOf(i)}>{textOf(i)}</a></li>
+      ))}
+    </ol>
+  </aside>
+) : null}

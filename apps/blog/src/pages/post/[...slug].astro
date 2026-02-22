@@ -1,10 +1,10 @@
 ﻿---
 import PostLayout from "../../layouts/PostLayout.astro";
 import TOC from "../../components/TOC.astro";
-import Breadcrumbs from "../../components/Breadcrumbs.astro";
-import ShareBar from "../../components/ShareBar.astro";
-import NewsletterBox from "../../components/NewsletterBox.astro";
-import CTABox from "../../components/CTABox.astro";
+import Breadcrumbs from "../../components/nav/Breadcrumbs.astro";
+import ShareBar from "../../components/blocks/ShareBar.astro";
+import NewsletterBox from "../../components/blocks/NewsletterBox.astro";
+import CTABox from "../../components/blocks/CTABox.astro";
 import LikeButton from "../../components/LikeButton.astro";
 import CommentBox from "../../components/CommentBox.astro";
 
@@ -112,3 +112,6 @@ const postSlug = (post as any)?.slug ? String((post as any).slug) : slug;
     </>
   )}
 </PostLayout>
+
+
+
