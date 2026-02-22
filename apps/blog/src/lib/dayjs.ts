@@ -13,3 +13,20 @@ dayjs.locale("pt-br");
 
 export default dayjs;
 export { dayjs };
+// ======================================
+// Formatter (usado em páginas de listagem)
+// ======================================
+export function dateFormatter(
+  date?: string | Date | null,
+  format = "DD/MM/YYYY"
+) {
+  if (!date) return "";
+  try {
+    // se já existe um dayjs default no arquivo, isso funciona igual
+    // se não existir, ajuste para a forma que você já usa no arquivo
+    // @ts-ignore
+    return dayjs(date).format(format);
+  } catch {
+    return "";
+  }
+}

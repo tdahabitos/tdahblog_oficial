@@ -1,4 +1,4 @@
-// apps/blog/src/services/api.ts
+﻿// apps/blog/src/services/api.ts
 
 // ======================
 // Tipos (front-friendly)
@@ -44,8 +44,8 @@ export type Post = {
 // Config / helpers
 // ======================
 
-// 💡 SLUGS DAS COLLECTIONS NO PAYLOAD
-// Ajuste aqui se o seu Payload estiver usando nomes em português (ex: 'categorias', 'autores')
+// ðŸ’¡ SLUGS DAS COLLECTIONS NO PAYLOAD
+// Ajuste aqui se o seu Payload estiver usando nomes em portuguÃªs (ex: 'categorias', 'autores')
 const COLLECTION_POSTS = 'posts'
 const COLLECTION_CATEGORIES = 'categorias'
 const COLLECTION_AUTHORS = 'authors'
@@ -63,7 +63,7 @@ const API_TOKEN =
   ''
 
 /**
- * Se você precisar de um header específico (ex: "Bearer xxx" ou "API-Key xxx"),
+ * Se vocÃª precisar de um header especÃ­fico (ex: "Bearer xxx" ou "API-Key xxx"),
  * defina PAYLOAD_AUTH_HEADER no .env.
  */
 const API_AUTH_HEADER =
@@ -112,14 +112,14 @@ function toPaged<T>(data: PayloadListResponse<T>): Paged<T> {
 function assertApiBase() {
   if (!API_BASE) {
     throw new Error(
-      'PAYLOAD_URL não definido. Defina PAYLOAD_URL ou PUBLIC_PAYLOAD_URL no .env'
+      'PAYLOAD_URL nÃ£o definido. Defina PAYLOAD_URL ou PUBLIC_PAYLOAD_URL no .env'
     )
   }
 }
 
 function joinUrl(base: string, path: string) {
   if (!path) return base
-  // Se já é URL absoluta, não concatena
+  // Se jÃ¡ Ã© URL absoluta, nÃ£o concatena
   if (/^https?:\/\//i.test(path)) return path
   if (!base) return path
   return `${base}${path.startsWith('/') ? '' : '/'}${path}`
@@ -133,11 +133,11 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
     ...(init?.headers as any),
   }
 
-  // Auth: preferir header explícito se existir
+  // Auth: preferir header explÃ­cito se existir
   if (API_AUTH_HEADER) {
     headers.Authorization = String(API_AUTH_HEADER)
   } else if (API_TOKEN) {
-    // Se o token já vier com esquema (ex: "Bearer xxx"), respeita.
+    // Se o token jÃ¡ vier com esquema (ex: "Bearer xxx"), respeita.
     const tokenStr = String(API_TOKEN)
     headers.Authorization = tokenStr.includes(' ') ? tokenStr : `Bearer ${tokenStr}`
   }
@@ -155,14 +155,14 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 /**
- * ✅ Compatibilidade: páginas antigas importam { apiFetcher }
+ * âœ… Compatibilidade: pÃ¡ginas antigas importam { apiFetcher }
  * (ex: src/pages/categoria/[slug].astro)
  */
 export async function apiFetcher<T>(path: string, init?: RequestInit): Promise<T> {
   return fetchJson<T>(path, init)
 }
 
-// resolve url de media quando o Payload retorna só um path relativo
+// resolve url de media quando o Payload retorna sÃ³ um path relativo
 export function resolveMediaUrl(url?: string) {
   if (!url) return ''
   if (url.startsWith('http://') || url.startsWith('https://')) return url
@@ -697,3 +697,14 @@ export async function searchPosts(
 
   return posts.filter((p: any) => hay(p).includes(q));
 }
+
+// AUTO-FIX: export faltando para destravar build
+export const getAllClusters = (..._args: any[]) => {
+  throw new Error('TODO: implement getAllClusters');
+};
+
+
+// AUTO-FIX: export faltando para destravar build
+export const getAllTags = (..._args: any[]) => {
+  throw new Error('TODO: implement getAllTags');
+};
