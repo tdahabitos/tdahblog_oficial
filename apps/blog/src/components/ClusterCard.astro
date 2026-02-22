@@ -1,14 +1,40 @@
 ﻿---
-
-
+// src/components/ClusterCard.astro
 const props: any = Astro.props;
 const cluster = props?.cluster ?? null;
 
 const title = props?.title ?? cluster?.title;
 const desc  = props?.desc  ?? cluster?.desc;
 const href  = props?.href  ?? cluster?.href;
-
-// Passa TUDO: se o Inner espera "cluster", ele usa.
-// se espera "title/desc/href", ele usa.
 ---
-<Inner cluster={cluster ?? { title, desc, href }} title={title} desc={desc} href={href} />
+
+<a href={href} class="cluster-card">
+  <div class="cluster-content">
+    <h3>{title}</h3>
+    <p>{desc}</p>
+  </div>
+</a>
+
+<style>
+  .cluster-card {
+    display: block;
+    padding: 24px;
+    background: var(--lav-050); /* Usando suas variáveis do BaseLayout */
+    border: 1px solid var(--lav-300);
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+  .cluster-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--sun-400);
+  }
+  .cluster-card h3 {
+    margin: 0 0 8px 0;
+    color: var(--lav-700);
+  }
+  .cluster-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #444;
+  }
+</style>
