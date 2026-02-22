@@ -708,3 +708,8 @@ export const getAllClusters = (..._args: any[]) => {
 export const getAllTags = (..._args: any[]) => {
   throw new Error('TODO: implement getAllTags');
 };
+// ... (mantenha todo o seu código anterior exatamente como está até a linha 460)
+
+// ======================================
+// ADIÇÕES PARA DESTRAVAR O BUILD
+// ======================================
