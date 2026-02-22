@@ -1,0 +1,26 @@
+/* Dark terapêutico — override sem preto/branco puros */
+:root[data-theme="dark"] {
+  --color-semantic-surface-0: #171514;
+  --color-semantic-surface-1: #201D1B;
+  --color-semantic-surface-2: #2A2624;
+  --color-semantic-surface-3: #3A3431;
+
+  --color-semantic-text-primary: #F2EEEA;
+  --color-semantic-text-secondary: #CFC8C2;
+  --color-semantic-text-muted: #A69E98;
+  --color-semantic-text-inverse: #171514;
+
+  --color-semantic-brand-primary: #A89CC8;
+  --color-semantic-brand-secondary: #8C7DB6;
+  --color-semantic-brand-soft: #6B5CA5;
+  --color-semantic-brand-whisper: #2A2624;
+
+  --color-semantic-border-subtle: #2A2624;
+  --color-semantic-border-default: #3A3431;
+  --color-semantic-border-strong: #4A4441;
+  --color-semantic-border-focus: #8C7DB6;
+
+  --shadow-sm: 0 0 0 rgba(0,0,0,0);
+  --shadow-md: 0 0 0 rgba(0,0,0,0);
+  --shadow-lg: 0 0 0 rgba(0,0,0,0);
+}

@@ -1,0 +1,15 @@
+lead_magnets:
+  - name: Diagnóstico TSS-36 Lite
+    type: quiz
+    stage: regulation
+    description: Avaliação inicial do padrão cognitivo
+
+  - name: Mapa do Colapso Executivo
+    type: pdf
+    stage: clarity
+    description: Identificação visual do ponto de ruptura
+
+  - name: Protocolo Memória Externa
+    type: produto
+    stage: sustainment
+    price: 27
