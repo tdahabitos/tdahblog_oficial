@@ -1,0 +1,335 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Sobre o VivaTDAH";
+const description =
+  "O VivaTDAH é um ecossistema de conteúdo para reduzir sobrecarga, aumentar clareza prática e construir suporte real para quem convive com TDAH.";
+
+const canonical = Astro.site ? new URL(`/sobre`, Astro.site).toString() : `/sobre`;
+const ogImage = "/hero/comece-aqui.jpg";
+
+const pillars = [
+  {
+    title: "Clareza",
+    desc: "Entender o que está acontecendo (sem culpa e sem mitos) para decidir melhor.",
+  },
+  {
+    title: "Ferramentas",
+    desc: "Estratégias pequenas, repetíveis e compatíveis com dias reais.",
+  },
+  {
+    title: "Suporte",
+    desc: "Apoio humano e scaffolding: porque força de vontade não é sistema.",
+  },
+];
+
+const whatWeDo = [
+  {
+    title: "Trilhas guiadas",
+    desc: "Conteúdo organizado por necessidade, momento e objetivo, para você não se perder.",
+  },
+  {
+    title: "Ferramentas práticas",
+    desc: "Checklists, modelos e micro-rotinas para reduzir atrito na execução.",
+  },
+  {
+    title: "Comunidade",
+    desc: "Espaço de troca com menos julgamento e mais validação útil.",
+  },
+  {
+    title: "Ciência em linguagem humana",
+    desc: "Evidência traduzida para virar decisão prática, sem virar “paper infinito”.",
+  },
+];
+
+const principles = [
+  { title: "Sem heroísmo", desc: "A meta é funcionar melhor, não performar perfeição." },
+  { title: "Menos culpa", desc: "Problema de execução quase sempre é fricção, energia e contexto." },
+  { title: "Mais compatibilidade", desc: "Soluções que cabem no seu tipo de dia, não só no dia ideal." },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+  ogType="website"
+>
+  <style>
+    .aboutWrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(18px, 4vw, 56px) 16px;
+      display: grid;
+      gap: clamp(18px, 3vw, 34px);
+    }
+
+    .sectionTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.55rem, 2.3vw, 2.25rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px 0;
+      position: relative;
+    }
+    .sectionTitle::after {
+      content: "";
+      display: block;
+      width: 72px;
+      height: 2px;
+      margin-top: 12px;
+      background: rgba(170, 140, 255, 0.65);
+    }
+
+    .card {
+      background: rgba(45, 27, 78, 0.42);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      border-radius: 18px;
+      padding: clamp(16px, 3vw, 34px);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+    }
+
+    .muted {
+      color: rgba(246, 243, 255, 0.78);
+    }
+
+    /* HERO */
+    .hero {
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      background: rgba(45, 27, 78, 0.92);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 980px) {
+      .hero {
+        grid-template-columns: 1.08fr 0.92fr;
+        min-height: 360px;
+      }
+    }
+
+    .heroText {
+      padding: clamp(18px, 3vw, 34px);
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .kicker {
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      opacity: 0.92;
+      color: rgba(246, 243, 255, 0.92);
+    }
+
+    .heroTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2rem, 3.4vw, 3.1rem);
+      line-height: 1.04;
+      margin: 0;
+      color: #fff;
+    }
+
+    .heroLead {
+      margin: 0;
+      line-height: 1.65;
+      color: rgba(246, 243, 255, 0.84);
+      max-width: 62ch;
+      font-size: 1.05rem;
+    }
+
+    .heroActions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .heroActions a {
+      text-decoration: none;
+    }
+
+    .heroMedia {
+      position: relative;
+      min-height: 220px;
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .heroMedia img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      filter: saturate(1.02) contrast(1.02);
+    }
+
+    /* grids */
+    .grid3 {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 780px) {
+      .grid3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .miniCard {
+      background: rgba(45, 27, 78, 0.92);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      border-radius: 18px;
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+      height: 100%;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .miniTitle {
+      margin: 0;
+      color: #fff;
+      font-weight: 780;
+      line-height: 1.2;
+    }
+
+    /* list */
+    .list {
+      margin: 0;
+      padding-left: 1.1rem;
+      line-height: 1.75;
+    }
+    .list li + li {
+      margin-top: 10px;
+    }
+    .list ::marker {
+      color: rgba(170, 140, 255, 0.85);
+    }
+
+    /* CTA */
+    .cta {
+      background: rgba(45, 27, 78, 0.35);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      display: grid;
+      gap: 14px;
+      align-items: center;
+      text-align: left;
+    }
+    .ctaActions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .ctaActions a {
+      text-decoration: none;
+    }
+    @media (min-width: 900px) {
+      .cta {
+        grid-template-columns: 1.3fr 0.7fr;
+      }
+      .ctaActions {
+        justify-content: flex-end;
+      }
+    }
+  </style>
+
+  <section class="aboutWrap" style="padding-top: 22px;">
+    <!-- HERO -->
+    <header class="hero">
+      <div class="heroText">
+        <div class="kicker">SOBRE</div>
+        <h1 class="heroTitle">VivaTDAH</h1>
+
+        <p class="heroLead">
+          Transformando a jornada de quem convive com o TDAH com clareza prática e acolhimento.
+          Menos ruído, mais caminho.
+        </p>
+
+        <div class="heroActions">
+          <a class="ds-btn ds-btn-primary" href="/comece-aqui">Começar por aqui</a>
+          <a class="ds-btn ds-btn-outline" href="/ciencia">Ver Ciência</a>
+        </div>
+      </div>
+
+      <div class="heroMedia">
+        <img src="/hero/comece-aqui.jpg" alt="VivaTDAH" loading="eager" decoding="async" />
+      </div>
+    </header>
+  </section>
+
+  <main class="aboutWrap">
+    <!-- A Empresa -->
+    <section class="card">
+      <h2 class="sectionTitle">O que é o VivaTDAH</h2>
+      <p class="muted" style="margin:0; line-height:1.7; max-width:72ch;">
+        O VivaTDAH não é só um blog. É um ecossistema de conteúdo desenhado para reduzir sobrecarga mental,
+        organizar decisões e transformar conhecimento em prática do dia a dia.
+      </p>
+
+      <div style="height:14px;"></div>
+
+      <div class="grid3">
+        {pillars.map((p) => (
+          <div class="miniCard">
+            <h3 class="miniTitle">{p.title}</h3>
+            <p class="muted" style="margin:0; line-height:1.6;">
+              {p.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- O que fazemos -->
+    <section class="card">
+      <h2 class="sectionTitle">O que fazemos</h2>
+
+      <div class="grid3">
+        {whatWeDo.map((w) => (
+          <div class="miniCard">
+            <h3 class="miniTitle">{w.title}</h3>
+            <p class="muted" style="margin:0; line-height:1.6;">
+              {w.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Como pensamos -->
+    <section class="card">
+      <h2 class="sectionTitle">Como pensamos</h2>
+      <ul class="list">
+        {principles.map((x) => (
+          <li class="muted">
+            <strong style="color:#fff;">{x.title}:</strong> {x.desc}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- CTA -->
+    <section class="card cta">
+      <div>
+        <h2 style="margin:0 0 8px 0; font-family:'Playfair Display',serif; color:#fff;">
+          Quer um caminho simples para começar?
+        </h2>
+        <p class="muted" style="margin:0; line-height:1.7;">
+          Vá para “Comece aqui” e escolha seu próximo passo com menos ruído.
+        </p>
+      </div>
+
+      <div class="ctaActions">
+        <a class="ds-btn ds-btn-primary" href="/comece-aqui">Ir para Comece aqui</a>
+        <a class="ds-btn ds-btn-outline" href="/estrategias">Ver Estratégias</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

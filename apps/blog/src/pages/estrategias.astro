@@ -1,10 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import MagCard from "../components/editorial/MagCard.astro";
 
 const title = "Estratégias | VivaTDAH";
 const description =
   "Estratégias práticas para TDAH: foco, rotina, procrastinação, planejamento, ambiente, suporte e execução com menos atrito.";
 
+const canonical = Astro.site ? new URL(`/estrategias`, Astro.site).toString() : `/estrategias`;
+const ogImage = "/hero/TDAH%20sintomas.png";
+
+/* ====== Conteúdo (o que você já tinha) ====== */
 const clusters = [
   { title: "Foco e atenção", description: "Como entrar, manter e sair do foco com menos custo.", href: "/post/foco-e-rotina" },
   { title: "Procrastinação", description: "O que está por trás e como destravar por etapas.", href: "/post/procrastinacao" },
@@ -25,71 +30,541 @@ const faq = [
   { q: "Como eu paro de começar e não terminar?", a: "Reduza o tamanho da primeira ação, crie checkpoints e feche ciclos. Terminar pequeno todos os dias é melhor que começar grande e colapsar." },
   { q: "Ferramenta resolve?", a: "Ferramenta ajuda, mas o motor é desenho do ambiente + suporte + ritmo. App sem sistema vira cobrança." },
 ];
+
+/* ====== Layout estilo “revista roxinho” ====== */
+const hero = {
+  kicker: "SEÇÃO",
+  title: "Estratégias",
+  subtitle:
+    "Aqui é desenho de sistema: menos “dica”, mais método. Ambiente, sequência, energia e suporte para executar com menos atrito.",
+  image: "/hero/TDAH%20sintomas.png",
+  alt: "Estratégias práticas para TDAH",
+};
+
+const quickRoutes = [
+  { title: "Foco e rotina", desc: "Entrar no foco sem se esgotar. Sair do foco sem colapsar.", href: "/post/foco-e-rotina" },
+  { title: "Procrastinação", desc: "Destravar por etapas. Fricção, emoção e energia.", href: "/post/procrastinacao" },
+  { title: "Planejamento realista", desc: "Tempo subjetivo, limites e previsibilidade possível.", href: "/post/planejamento-realista" },
+];
+
+const steps = [
+  { title: "1) Comece menor do que seu ego quer", text: "A primeira ação precisa ser fácil o suficiente para acontecer mesmo em dia ruim." },
+  { title: "2) Faça o ambiente puxar você", text: "Se tudo depende de força de vontade, você vai perder no longo prazo. Ajuste gatilhos, ordem e atrito." },
+  { title: "3) Crie checkpoints curtos", text: "Terminar pequeno todo dia é melhor do que começar gigante e sumir por 10 dias." },
+  { title: "4) Apoio e scaffolding não são muleta", text: "Ferramentas externas e apoio humano são parte do sistema, não “fraqueza”." },
+];
+
+/* ====== Featured (1 grande + 3) ====== */
+const featuredCardImages = [
+  "/hero/TDAH_sintomas.png",
+  "/hero/tdah.jpg",
+  "/hero/Diagnostico.jpg",
+  "/hero/comece-aqui.jpg",
+];
+
+const featuredHero = {
+  href: curated?.[0]?.href ?? "/post/foco-e-rotina",
+  kicker: "CARACTERÍSTICA",
+  title: curated?.[0]?.title ?? "Estratégias reais para foco e rotina",
+  excerpt: curated?.[0]?.excerpt ?? "Ferramentas práticas para organizar o dia sem se esgotar.",
+  image: featuredCardImages[0],
+  imageAlt: "Imagem de capa",
+};
+
+const featuredCards = [
+  {
+    href: curated?.[1]?.href ?? "/post/procrastinacao",
+    kicker: "CARACTERÍSTICA",
+    title: curated?.[1]?.title ?? "Procrastinação no TDAH",
+    excerpt: curated?.[1]?.excerpt ?? "Não é preguiça. É fricção, emoção e energia.",
+    image: featuredCardImages[1],
+    imageAlt: "Imagem procrastinação",
+    variant: "green",
+  },
+  {
+    href: curated?.[2]?.href ?? "/post/planejamento-realista",
+    kicker: "CARACTERÍSTICA",
+    title: curated?.[2]?.title ?? "Planejamento realista",
+    excerpt: curated?.[2]?.excerpt ?? "Como parar de prometer um dia que não existe.",
+    image: featuredCardImages[2],
+    imageAlt: "Imagem planejamento",
+    variant: "green",
+  },
+  {
+    href: "/trilhas",
+    kicker: "FERRAMENTAS",
+    title: "Trilhas guiadas por objetivo",
+    excerpt: "Um caminho prático (com começo, meio e fim) para executar com menos atrito.",
+    image: featuredCardImages[3],
+    imageAlt: "Imagem trilhas",
+    variant: "green",
+  },
+];
+
+const cta = {
+  title: "Quer trilhas guiadas por objetivo?",
+  text: "Se você quer um caminho prático (com começo, meio e fim), vá para Trilhas.",
+  primaryHref: "/trilhas",
+  primaryLabel: "Ver trilhas",
+  secondaryHref: "/post/foco-e-rotina",
+  secondaryLabel: "Começar pelo foco",
+};
 ---
 
-<BaseLayout title={title} description={description}>
-  <div class="richtext-wrapper">
-    <h1>Estratégias</h1>
-    <p class="muted">
-      Estratégias aqui são desenho de sistema. Menos “dica”, mais método: ambiente, sequência, energia e suporte.
-    </p>
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+  ogType="website"
+>
+  <style>
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(18px, 4vw, 56px) 16px;
+      display: grid;
+      gap: clamp(18px, 3vw, 34px);
+    }
 
-    <hr />
+    .sectionTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.55rem, 2.3vw, 2.25rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px 0;
+      position: relative;
+    }
+    .sectionTitle::after {
+      content: "";
+      display: block;
+      width: 72px;
+      height: 2px;
+      margin-top: 12px;
+      background: rgba(170, 140, 255, 0.65);
+    }
 
-    <h2>Clusters principais</h2>
-    <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
-      {clusters.map((c) => (
-        <a class="ds-card" href={c.href} style="padding: 14px; text-decoration:none;">
-          <strong style="display:block; margin-bottom:6px;">{c.title}</strong>
-          <span class="ds-muted" style="display:block; line-height:1.5;">{c.description}</span>
-        </a>
-      ))}
-    </div>
+    .card {
+      background: rgba(45, 27, 78, 0.42);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      border-radius: 18px;
+      padding: clamp(16px, 3vw, 34px);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+    }
 
-    <style>
-      @media (max-width: 760px) {
-        div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+    .muted {
+      color: rgba(246, 243, 255, 0.78);
+    }
+
+    /* HERO */
+    .hero {
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      background: rgba(45, 27, 78, 0.92);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 980px) {
+      .hero {
+        grid-template-columns: 1.08fr 0.92fr;
+        min-height: 380px;
       }
-    </style>
+    }
 
-    <hr />
+    .heroText {
+      padding: clamp(18px, 3vw, 34px);
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
 
-    <h2>Leituras recomendadas</h2>
-    <div style="display:grid; gap: 12px;">
-      {curated.map((p) => (
-        <div class="ds-card">
-          <div class="ds-card-body">
-            <h3 style="margin:0 0 6px 0;">{p.title}</h3>
-            <p class="ds-muted" style="margin:0 0 12px 0;">{p.excerpt}</p>
-            <a class="ds-btn ds-btn-outline" href={p.href} style="width:auto;">Ler agora</a>
-          </div>
+    .kicker {
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      opacity: 0.92;
+      color: rgba(246, 243, 255, 0.92);
+    }
+
+    .heroTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2rem, 3.4vw, 3.1rem);
+      line-height: 1.04;
+      margin: 0;
+      color: #fff;
+    }
+
+    .heroSubtitle {
+      margin: 0;
+      line-height: 1.65;
+      color: rgba(246, 243, 255, 0.84);
+      max-width: 62ch;
+    }
+
+    .heroActions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .heroActions a { text-decoration: none; }
+
+    .heroMedia {
+      position: relative;
+      min-height: 240px;
+      background: rgba(0, 0, 0, 0.12);
+    }
+    .heroMedia img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* Rotas rápidas */
+    .grid3 {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 780px) {
+      .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    .routeCard {
+      background: rgba(45, 27, 78, 0.92);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      border-radius: 18px;
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+      height: 100%;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .routeTitle {
+      font-family: "Playfair Display", serif;
+      font-size: 1.25rem;
+      margin: 0;
+      color: #fff;
+      line-height: 1.12;
+    }
+
+    /* Clusters */
+    .clustersGrid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .clustersGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 1024px) {
+      .clustersGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    .clusterCard {
+      background: rgba(45, 27, 78, 0.92);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      border-radius: 18px;
+      padding: 16px;
+      text-decoration: none;
+      color: inherit;
+      display: grid;
+      gap: 8px;
+      height: 100%;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .clusterCard:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .clusterCard, .clusterCard:hover { transition: none; transform: none; }
+    }
+
+    .clusterTitle {
+      margin: 0;
+      font-weight: 780;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    /* Steps */
+    .steps { display: grid; gap: 12px; }
+    .stepRow {
+      display: grid;
+      gap: 6px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(170, 140, 255, 0.18);
+    }
+    .stepRow:last-child { border-bottom: none; }
+    .stepTitle { margin: 0; font-weight: 760; color: #fff; }
+    .stepText {
+      margin: 0;
+      color: rgba(246, 243, 255, 0.78);
+      line-height: 1.6;
+      max-width: 72ch;
+    }
+
+    /* Featured */
+    .featuredWrap { display: grid; gap: 18px; }
+
+    .featuredBig {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      background: rgba(45, 27, 78, 0.92);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+    }
+
+    .featuredBig a {
+      display: grid;
+      grid-template-columns: 1fr;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    @media (min-width: 980px) {
+      .featuredBig a {
+        grid-template-columns: 1.1fr 0.9fr;
+        min-height: 360px;
+      }
+    }
+
+    .featuredBigText {
+      padding: clamp(18px, 3vw, 34px);
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .featuredBigTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+      line-height: 1.08;
+      margin: 0;
+      color: #fff;
+    }
+
+    .featuredBigExcerpt {
+      margin: 0;
+      line-height: 1.6;
+      color: rgba(246, 243, 255, 0.84);
+      max-width: 62ch;
+    }
+
+    .featuredBigMedia { position: relative; min-height: 240px; }
+    .featuredBigMedia img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .magGrid3 {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+    @media (min-width: 780px) {
+      .magGrid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    .featuredWrap :global(a) { text-decoration: none; color: inherit; }
+
+    .featuredWrap :global(.magCard img) {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .featuredWrap :global(.magCard--green) {
+      background: rgba(45, 27, 78, 0.92) !important;
+      border: 1px solid rgba(170, 140, 255, 0.22) !important;
+      color: #f6f3ff !important;
+      border-radius: 18px;
+      overflow: hidden;
+      height: 100%;
+    }
+    .featuredWrap :global(.magCard--green .ds-muted) {
+      color: rgba(246, 243, 255, 0.78) !important;
+    }
+
+    /* CTA */
+    .cta {
+      background: rgba(45, 27, 78, 0.35);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      display: grid;
+      gap: 14px;
+      align-items: center;
+      text-align: left;
+    }
+
+    .ctaActions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .ctaActions a { text-decoration: none; }
+
+    @media (min-width: 900px) {
+      .cta { grid-template-columns: 1.3fr 0.7fr; }
+      .ctaActions { justify-content: flex-end; }
+    }
+
+    /* FAQ */
+    .faqItem {
+      border-bottom: 1px solid rgba(170, 140, 255, 0.18);
+      padding: 14px 0;
+    }
+    .faqItem summary {
+      cursor: pointer;
+      font-weight: 700;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .faqItem summary::-webkit-details-marker { display: none; }
+  </style>
+
+  <!-- HERO -->
+  <section class="wrap" style="padding-top: 22px;">
+    <header class="hero">
+      <div class="heroText">
+        <div class="kicker">{hero.kicker}</div>
+        <h1 class="heroTitle">{hero.title}</h1>
+        <p class="heroSubtitle">{hero.subtitle}</p>
+
+        <div class="heroActions">
+          <a class="ds-btn ds-btn-primary" href="/trilhas">Ver trilhas</a>
+          <a class="ds-btn ds-btn-outline" href="/post/foco-e-rotina">Começar pelo foco</a>
         </div>
-      ))}
-    </div>
-
-    <hr />
-
-    <div class="ds-card ds-card--feature">
-      <div class="ds-card-body">
-        <div class="ds-badge">Ferramentas</div>
-        <h2 style="margin-top: 12px;">Quer trilhas guiadas por objetivo?</h2>
-        <p class="ds-muted">
-          Se você quer um caminho prático (com começo, meio e fim), vá para Trilhas.
-        </p>
-        <a class="ds-btn ds-btn-primary" href="/trilhas" style="max-width: 260px;">
-          Ver trilhas
-        </a>
       </div>
-    </div>
 
-    <hr />
+      <div class="heroMedia">
+        <img src={hero.image} alt={hero.alt} loading="eager" decoding="async" />
+      </div>
+    </header>
+  </section>
 
-    <h2>FAQ</h2>
-    {faq.map((item) => (
-      <details class="ds-card" style="padding: 14px; margin-bottom: 10px;">
-        <summary style="cursor:pointer; font-weight: 700;">{item.q}</summary>
-        <p class="ds-muted" style="margin: 10px 0 0 0;">{item.a}</p>
-      </details>
-    ))}
-  </div>
+  <main class="wrap">
+    <!-- Rotas rápidas -->
+    <section class="card">
+      <h2 class="sectionTitle">Rotas rápidas</h2>
+      <div class="grid3">
+        {quickRoutes.map((r) => (
+          <a class="routeCard" href={r.href}>
+            <h3 class="routeTitle">{r.title}</h3>
+            <p class="muted" style="margin:0; line-height:1.55;">{r.desc}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Clusters -->
+    <section class="card">
+      <h2 class="sectionTitle">Clusters principais</h2>
+      <div class="clustersGrid">
+        {clusters.map((c) => (
+          <a class="clusterCard" href={c.href}>
+            <h3 class="clusterTitle">{c.title}</h3>
+            <p class="muted" style="margin:0; line-height:1.55;">{c.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Método rápido -->
+    <section class="card">
+      <h2 class="sectionTitle">Método rápido</h2>
+      <div class="steps">
+        {steps.map((s) => (
+          <div class="stepRow">
+            <h3 class="stepTitle">{s.title}</h3>
+            <p class="stepText">{s.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Artigos de destaque -->
+    <section>
+      <h2 class="sectionTitle">Artigos de destaque</h2>
+
+      <div class="featuredWrap">
+        <article class="featuredBig">
+          <a href={featuredHero.href}>
+            <div class="featuredBigText">
+              <div class="kicker">{featuredHero.kicker}</div>
+              <h3 class="featuredBigTitle">{featuredHero.title}</h3>
+              <p class="featuredBigExcerpt">{featuredHero.excerpt}</p>
+            </div>
+
+            <div class="featuredBigMedia">
+              <img
+                src={featuredHero.image}
+                alt={featuredHero.imageAlt}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </a>
+        </article>
+
+        <div class="magGrid3">
+          {featuredCards.map((c) => (
+            <MagCard {...c} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="card cta">
+      <div>
+        <h2 style="margin:0 0 8px 0; font-family:'Playfair Display',serif; color:#fff;">
+          {cta.title}
+        </h2>
+        <p class="muted" style="margin:0; line-height:1.7;">
+          {cta.text}
+        </p>
+      </div>
+
+      <div class="ctaActions">
+        <a class="ds-btn ds-btn-primary" href={cta.primaryHref}>{cta.primaryLabel}</a>
+        <a class="ds-btn ds-btn-outline" href={cta.secondaryHref}>{cta.secondaryLabel}</a>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="card">
+      <h2 class="sectionTitle">FAQ</h2>
+      {faq.map((item, idx) => (
+        <details class="faqItem" open={idx === 0}>
+          <summary>
+            <span>{item.q}</span>
+            <span aria-hidden="true" style="opacity:.8;">›</span>
+          </summary>
+          <p class="muted" style="margin:10px 0 0 0; line-height:1.7; max-width:72ch;">
+            {item.a}
+          </p>
+        </details>
+      ))}
+    </section>
+  </main>
 </BaseLayout>

@@ -1,15 +1,599 @@
 ﻿---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import LeadBox from "../components/editorial/LeadBox.astro";
+import ClusterCard from "../components/ClusterCard.astro";
+
+// Cards
+import MagCard from "../components/editorial/MagCard.astro";
+
+// ✅ Mantive como está (depois a gente move pra /journeys/data/hub.ts)
+import { hub } from "./comece-aqui.astro";
+
+// SEO
+const canonical = Astro.site ? new URL(`/`, Astro.site).toString() : `/`;
+const ogImage = hub.heroImage;
+
+// ====== Adaptador leve ======
+const featuredRaw = Array.isArray(hub?.featured) ? hub.featured : [];
+
+// ✅ Imagens diferentes (atenção ao espaço no nome do arquivo)
+const featuredCardImages = [
+  "/hero/Diagnostico.jpg",
+  "/hero/TDAH_sintomas.png",
+  "/hero/tdah.jpg",
+];
+
+// ✅ Card destaque grande (split)
+const featuredHero = {
+  href: featuredRaw?.[0]?.href ?? "/diagnostico",
+  kicker: featuredRaw?.[0]?.kicker ?? "CARACTERÍSTICA",
+  title: featuredRaw?.[0]?.title ?? "Diagnóstico de TDAH na vida adulta",
+  excerpt: featuredRaw?.[0]?.desc ?? "O que ninguém te conta.",
+  author: featuredRaw?.[0]?.author ?? "",
+  dateLabel: featuredRaw?.[0]?.dateLabel ?? "",
+  image: featuredCardImages[0],
+  imageAlt: featuredRaw?.[0]?.imageAlt ?? "Imagem de capa",
+};
+
+// ✅ até 3 cards (grid) com imagens diferentes
+const featuredCards = featuredRaw.slice(1, 4).map((p, idx) => ({
+  href: p?.href ?? "#",
+  kicker: p?.kicker ?? "CARACTERÍSTICA",
+  title: p?.title ?? "Título",
+  excerpt: p?.desc ?? "",
+  author: p?.author ?? "",
+  dateLabel: p?.dateLabel ?? "",
+  image: featuredCardImages[idx + 1] ?? p?.image ?? "/og-placeholder.jpg",
+  imageAlt: p?.imageAlt ?? "",
+  bgImage: p?.bgImage ?? "",
+  variant: "green", // mantém "green" e a gente pinta de roxo no CSS
+}));
+
+// “More from …”
+const moreRaw = Array.isArray(hub?.more) ? hub.more : [];
+const moreCards =
+  moreRaw.length > 0
+    ? moreRaw.map((p, idx) => ({
+        href: p?.href ?? "#",
+        title: p?.title ?? "Título",
+        excerpt: p?.desc ?? "",
+        image:
+          p?.image ??
+          ["/hero/comece-aqui.jpg", "/hero/Diagnostico.jpg", "/hero/TDAH%20sintomas.png", "/hero/tdah.jpg"][idx % 4],
+        imageAlt: p?.imageAlt ?? "",
+        bgImage: p?.bgImage ?? "",
+      }))
+    : [
+        {
+          href: "/buscar",
+          title: "Mais artigos",
+          excerpt: "Veja mais conteúdos e trilhas.",
+          image: "/hero/comece-aqui.jpg",
+        },
+        {
+          href: "/ciencia",
+          title: "Ciência aplicada",
+          excerpt: "Evidências e explicações com pé no chão.",
+          image: "/hero/TDAH_sintomas.png",
+        },
+        {
+          href: "/estrategias",
+          title: "Estratégias reais",
+          excerpt: "Ferramentas práticas para rotina e foco.",
+          image: "/hero/tdah.jpg",
+        },
+        {
+          href: "/regulacao",
+          title: "Regulação",
+          excerpt: "Sono, energia, sensorial e sustentação.",
+          image: "/hero/Diagnostico.jpg",
+        },
+      ];
 ---
 
-<BaseLayout title="VivaTDAH" description="Conteúdo informativo e acessível sobre TDAH">
-  <script is:inline>
-    window.location.replace("/comece-aqui");
-  </script>
+<BaseLayout
+  title={hub.title}
+  description={hub.subtitle}
+  canonical={canonical}
+  ogImage={ogImage}
+  ogType="website"
+>
+  <style>
+    /* ====== A PARTIR DAQUI É SÓ “DO SEGUNDO PRINT PRA BAIXO” ====== */
 
-  <noscript>
-    <p style="padding:16px">
-      Vá para <a href="/comece-aqui">Comece aqui</a>.
-    </p>
-  </noscript>
+    .hubWrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(22px, 4vw, 56px) 16px;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(18px, 3vw, 34px);
+    }
+
+    .hubNarrow {
+      max-width: 980px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hubMeasure {
+      max-width: 72ch;
+    }
+
+    .hubSectionTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.6rem, 2.3vw, 2.25rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px 0;
+      position: relative;
+    }
+    .hubSectionTitle::after {
+      content: "";
+      display: block;
+      width: 72px;
+      height: 2px;
+      margin-top: 12px;
+      background: var(--color-brand-soft);
+      opacity: 0.9;
+    }
+
+    .nature-card {
+      background: var(--color-surface-1);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card, 18px);
+      padding: clamp(18px, 3.2vw, 40px);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
+    }
+
+    .hubList {
+      margin: 0;
+      padding-left: 1.1rem;
+      line-height: 1.75;
+    }
+    .hubList li + li {
+      margin-top: 10px;
+    }
+    .hubList ::marker {
+      color: var(--color-brand-soft);
+    }
+
+    .hubGrid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 720px) {
+      .hubGrid--clusters {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hubGrid--clusters {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    /* CTA grande */
+    .hubCTA {
+      background: rgba(45, 27, 78, 0.35);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      display: grid;
+      gap: 14px;
+      align-items: center;
+      text-align: left;
+    }
+
+    .hubActions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .hubActions a {
+      text-decoration: none;
+    }
+
+    @media (min-width: 900px) {
+      .hubCTA {
+        grid-template-columns: 1.3fr 0.7fr;
+      }
+      .hubCTA .hubActions {
+        justify-content: flex-end;
+      }
+    }
+
+    /* FAQ */
+    .faq-item {
+      border-bottom: 1px solid var(--color-border);
+      padding: 14px 0;
+    }
+
+    .hubFaqSummary {
+      cursor: pointer;
+      font-weight: 650;
+      list-style: none;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+    }
+
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .hubFaqSummary::after {
+      content: "›";
+      opacity: 0.85;
+      transform: rotate(90deg);
+      transition: transform 0.18s ease;
+    }
+
+    details[open] .hubFaqSummary::after {
+      transform: rotate(-90deg);
+    }
+
+    details:focus-within {
+      outline: 2px solid var(--color-brand-soft);
+      outline-offset: 6px;
+      border-radius: 12px;
+    }
+
+    /* ====== BLOCO “Artigos de Destaque” ====== */
+    .magWrap {
+      display: grid;
+      gap: 18px;
+      margin-top: 6px;
+    }
+
+    .magGrid3 {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    @media (min-width: 780px) {
+      .magGrid3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    /* remove underline geral dos cards */
+    .magWrap :global(a) {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ====== FEATURE SPLIT (card grande) ====== */
+    .featureSplit {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      background: rgba(45, 27, 78, 0.92);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+    }
+
+    .featureLink {
+      display: grid;
+      grid-template-columns: 1fr;
+      color: inherit;
+    }
+
+    @media (min-width: 980px) {
+      .featureLink {
+        grid-template-columns: 1.1fr 0.9fr;
+        min-height: 360px;
+      }
+    }
+
+    .featureText {
+      padding: clamp(18px, 3vw, 34px);
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .featureKicker {
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      opacity: 0.9;
+      color: rgba(246, 243, 255, 0.92);
+    }
+
+    .featureTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.55rem, 2.4vw, 2.2rem);
+      line-height: 1.08;
+      margin: 0;
+      color: #ffffff;
+    }
+
+    .featureExcerpt {
+      margin: 0;
+      line-height: 1.6;
+      opacity: 0.88;
+      max-width: 62ch;
+      color: rgba(246, 243, 255, 0.82);
+    }
+
+    .featureMeta {
+      margin-top: 6px;
+      font-size: 0.95rem;
+      opacity: 0.78;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: rgba(246, 243, 255, 0.78);
+    }
+
+    .featureMedia {
+      position: relative;
+      min-height: 220px;
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .featureMedia img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      filter: saturate(1.02) contrast(1.02);
+    }
+
+    /* MagCard: altura de imagem consistente */
+    .magWrap :global(.magCard img) {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* Roxinho: pinta o variant green sem mexer no componente */
+    .magWrap :global(.magCard--green) {
+      background: rgba(45, 27, 78, 0.92) !important;
+      border: 1px solid rgba(170, 140, 255, 0.22) !important;
+      color: #f6f3ff !important;
+      border-radius: 18px;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .magWrap :global(.magCard--green .ds-muted) {
+      color: rgba(246, 243, 255, 0.78) !important;
+    }
+
+    /* ====== MORE FROM (faixa preta) ====== */
+    .moreWrap {
+      margin-top: 10px;
+      background: #0b0b0b;
+      color: #f2f2f2;
+      padding: 28px 0;
+    }
+
+    .moreTitle {
+      max-width: 1100px;
+      margin: 0 auto 18px auto;
+      padding: 0 16px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.6rem, 2.2vw, 2.3rem);
+    }
+
+    .moreGrid {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 1fr;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    @media (min-width: 800px) {
+      .moreGrid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    /* ✅ AQUI: cards do “Mais do VivaTDAH” com miniaturas pequenas */
+    .moreCard {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    @media (min-width: 800px) {
+      .moreCard {
+        border-bottom: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .moreCard:nth-child(1) {
+        border-left: none;
+      }
+    }
+
+    .moreThumb {
+      width: 96px;
+      height: 64px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .moreThumb img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      filter: saturate(1.02) contrast(1.02);
+    }
+
+    .moreCardTitle {
+      font-family: "Playfair Display", serif;
+      font-size: 1.15rem;
+      line-height: 1.15;
+      margin: 0 0 6px 0;
+      color: #ffffff;
+    }
+
+    .moreCardExcerpt {
+      margin: 0;
+      line-height: 1.45;
+      opacity: 0.82;
+      color: rgba(255, 255, 255, 0.84);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .moreWrap a,
+    .moreWrap a:visited,
+    .moreWrap a:hover {
+      text-decoration: none;
+      color: inherit;
+    }
+  </style>
+
+  <!-- ✅ HERO (1º print) intacto -->
+  <LeadBox />
+
+  <main id="explore-section" class="hubWrap">
+    <section class="nature-card hubNarrow">
+      <div class="hubMeasure">
+        <h2 class="hubSectionTitle">Para quem é este guia</h2>
+        <ul class="hubList">
+          {hub.forWho.map((x) => <li>{x}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="nature-card hubNarrow">
+      <div class="hubMeasure">
+        <h2 class="hubSectionTitle">O que você vai encontrar aqui</h2>
+        <ul class="hubList">
+          {hub.whatYouFind.map((x) => <li>{x}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="hubSectionTitle">Clusters</h2>
+      <div class="hubGrid hubGrid--clusters">
+        {hub.clusters.map((c) => <ClusterCard cluster={c} />)}
+      </div>
+    </section>
+
+    <!-- ✅ Artigos de Destaque -->
+    <section>
+      <h2 class="hubSectionTitle">Artigos de Destaque</h2>
+
+      <div class="magWrap">
+        <!-- Card grande split -->
+        <article class="featureSplit">
+          <a class="featureLink" href={featuredHero.href}>
+            <div class="featureText">
+              <div class="featureKicker">{featuredHero.kicker}</div>
+              <h3 class="featureTitle">{featuredHero.title}</h3>
+              {featuredHero.excerpt ? (
+                <p class="featureExcerpt">{featuredHero.excerpt}</p>
+              ) : null}
+
+              {featuredHero.author || featuredHero.dateLabel ? (
+                <div class="featureMeta">
+                  {featuredHero.author ? <span>Por {featuredHero.author}</span> : null}
+                  {featuredHero.dateLabel ? <span>{featuredHero.dateLabel}</span> : null}
+                </div>
+              ) : null}
+            </div>
+
+            <div class="featureMedia">
+              <img
+                src={featuredHero.image}
+                alt={featuredHero.imageAlt}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </a>
+        </article>
+
+        <!-- até 3 cards -->
+        <div class="magGrid3">
+          {featuredCards.map((c) => (
+            <MagCard {...c} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="nature-card hubCTA">
+      <div>
+        <h2 style="margin: 0 0 8px 0;">{hub.cta.title}</h2>
+        <p class="ds-muted" style="margin: 0; line-height: 1.7;">
+          {hub.cta.text}
+        </p>
+      </div>
+
+      <div class="hubActions">
+        <a class="ds-btn ds-btn-primary" href={hub.cta.primaryHref}>
+          {hub.cta.primaryLabel}
+        </a>
+        <a class="ds-btn ds-btn-outline" href={hub.cta.secondaryHref}>
+          {hub.cta.secondaryLabel}
+        </a>
+      </div>
+    </section>
+
+    <section class="nature-card hubNarrow">
+      <div class="hubMeasure">
+        <h2 class="hubSectionTitle">FAQ</h2>
+        <div class="hubFaq">
+          {hub.faq.map((f, idx) => (
+            <details class="faq-item" open={idx === 0}>
+              <summary class="hubFaqSummary">{f.q}</summary>
+              <p class="ds-muted" style="margin: 10px 0 0 0; line-height: 1.7;">
+                {f.a}
+              </p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ✅ “Mais do VivaTDAH” com thumbs pequenos -->
+  <section class="moreWrap" aria-label="Mais conteúdos">
+    <h2 class="moreTitle">Mais do VivaTDAH</h2>
+
+    <div class="moreGrid">
+      {moreCards.map((c) => (
+        <a class="moreCard" href={c.href}>
+          <div class="moreThumb">
+            <img src={c.image} alt={c.imageAlt ?? ""} loading="lazy" decoding="async" />
+          </div>
+          <div>
+            <h3 class="moreCardTitle">{c.title}</h3>
+            <p class="moreCardExcerpt">{c.excerpt}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
 </BaseLayout>

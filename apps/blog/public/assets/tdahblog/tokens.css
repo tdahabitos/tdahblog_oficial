@@ -1,11 +1,11 @@
 /* ==========================================
    VivaTDAH — Design Tokens (Light)
-   Paleta: Lavender + Neutral (semânticos)
+   Paleta: Nature Lavender (Ajustada)
 ========================================== */
 
 :root {
   /* ==========================================
-     COLOR — PRIMITIVES
+     COLOR — PRIMITIVES (Mantendo cada linha original)
   ========================================== */
   --color-primitives-lavender-50:  #F4F1FB;
   --color-primitives-lavender-100: #EAE4F6;
@@ -30,19 +30,20 @@
   --color-primitives-neutral-900: #2A2823;
 
   /* ==========================================
-     COLOR — SEMANTIC (LIGHT)
+     COLOR — SEMANTIC (LIGHT) - AJUSTE NATURE LILÁS
   ========================================== */
-  /* Surfaces */
-  --color-surface-0: var(--color-primitives-neutral-50);
-  --color-surface-1: var(--color-primitives-neutral-100);
-  --color-surface-2: var(--color-primitives-neutral-200);
-  --color-surface-3: var(--color-primitives-neutral-300);
+  /* Surfaces: Trocado Neutral por Lavender para o fundo Lilás Nature */
+  /* ✅ Ajuste para o tom Lilás Suave constante no seu Design System */
+  --color-surface-0: var(--color-primitives-lavender-50);  /* Fundo principal Lilás Suave */
+  --color-surface-1: var(--color-primitives-lavender-100); /* Cards e seções levemente mais intensas */
+  --color-surface-2: var(--color-primitives-lavender-200);
+  --color-surface-3: var(--color-primitives-lavender-300);
 
   /* Text */
-  --color-text-primary:   var(--color-primitives-neutral-900);
+  --color-text-primary:    var(--color-primitives-neutral-900);
   --color-text-secondary: var(--color-primitives-neutral-700);
-  --color-text-muted:     var(--color-primitives-neutral-500);
-  --color-text-inverse:   var(--color-primitives-neutral-50);
+  --color-text-muted:      var(--color-primitives-neutral-500);
+  --color-text-inverse:    var(--color-primitives-neutral-50);
 
   /* Brand */
   --color-brand-primary:   var(--color-primitives-lavender-500);
@@ -50,8 +51,8 @@
   --color-brand-soft:      var(--color-primitives-lavender-200);
   --color-brand-whisper:   var(--color-primitives-lavender-50);
 
-  /* Border (sutil) */
-  --color-border: color-mix(in oklab, var(--color-text-primary) 12%, transparent);
+  /* Border (Nature Style: divisórias limpas e sutis) */
+  --color-border: rgba(155, 138, 216, 0.2); /* ✅ Borda lilás sutil para harmonizar com o fundo */
 
   /* Focus */
   --color-focus: var(--color-brand-soft);
@@ -67,7 +68,7 @@
   /* ==========================================
      TYPOGRAPHY
   ========================================== */
-  --font-editorial: 'Atkinson Hyperlegible', serif;
+  --font-editorial: 'Playfair Display', serif; /* Ajustado para fonte Nature */
   --font-ui: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 
   --text-body: clamp(1rem, 0.9vw + 0.8rem, 1.125rem);
@@ -95,7 +96,7 @@
   --space-32: 128px;
 
   /* ==========================================
-     RADIUS
+     RADIUS (Nature Style: Bordas Retas)
   ========================================== */
   --radius-xs: 2px;
   --radius-sm: 4px;
@@ -105,9 +106,9 @@
   --radius-xxl: 24px;
   --radius-full: 9999px;
 
-  /* Aliases usados no global.css (ds-*) */
-  --radius-card: var(--radius-lg);
-  --radius-button: var(--radius-md);
+  /* Aliases Nature: bordas retas nos blocos principais */
+  --radius-card: 0px; /* ✅ Nature usa bordas retas nos blocos principais */
+  --radius-button: 4px;
 
   /* ==========================================
      MOTION
@@ -118,17 +119,14 @@
   --motion-easing: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ==========================================
-     BACKWARDS COMPAT (pra não quebrar nada antigo)
-     (se algum CSS ainda usar esses nomes)
+     BACKWARDS COMPAT
   ========================================== */
   --color-bg: var(--color-surface-0);
   --color-text: var(--color-text-primary);
   --color-text-muted: var(--color-text-secondary);
-
   --color-link: var(--color-brand-primary);
   --color-link-hover: var(--color-brand-secondary);
   --color-accent: var(--color-brand-soft);
-
   --_surface-0: var(--color-surface-0);
   --_surface-1: var(--color-surface-1);
   --_surface-2: var(--color-surface-2);

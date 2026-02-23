@@ -1,104 +1,635 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import MagCard from "../components/editorial/MagCard.astro";
 
-const title = "Recursos | VivaTDAH";
+const title = "Regulação | VivaTDAH";
 const description =
-  "Recursos práticos para TDAH: guias, checklists, ferramentas, livros, aplicativos e caminhos de suporte para vida real.";
+  "Regulação emocional e sensorial no TDAH: energia, sono, estresse, rotina mínima e como estabilizar o básico antes de exigir produtividade.";
 
+const canonical = Astro.site ? new URL(`/regulacao`, Astro.site).toString() : `/regulacao`;
+const ogImage = "/hero/tdah.jpg";
+
+/* ====== Conteúdo ====== */
 const clusters = [
-  { title: "Checklists e guias", description: "Modelos simples para reduzir fricção e decisão.", href: "/post/checklists" },
-  { title: "Ferramentas e apps", description: "O que ajuda de verdade e como usar sem virar cobrança.", href: "/post/ferramentas-apps" },
-  { title: "Livros e leituras", description: "Curadoria sem exagero, com foco em utilidade.", href: "/post/livros" },
-  { title: "Trabalho e estudo", description: "Acomodações, rotina e organização prática.", href: "/post/trabalho-estudo" },
-  { title: "Família e relacionamentos", description: "Comunicação, limites e apoio sem briga.", href: "/post/familia-relacoes" },
-  { title: "Quando buscar ajuda", description: "Sinais de alerta e caminhos possíveis.", href: "/post/quando-buscar-ajuda" },
+  { title: "Sono", description: "Higiene do sono, ritmo, luz, tela e rotina mínima.", href: "/post/sono-tdah" },
+  { title: "Energia e exaustão", description: "Por que você apaga e como recuperar base.", href: "/post/energia-exaustao" },
+  { title: "Emoção no máximo", description: "Reatividade, vergonha, irritabilidade e regulação.", href: "/post/emocao-no-maximo" },
+  { title: "Sensibilidade sensorial", description: "Som, luz, textura, sobrecarga e prevenção.", href: "/post/regulacao-sensorial" },
+  { title: "Oscilação hormonal", description: "Ciclo menstrual, TPM, perimenopausa e sintomas.", href: "/post/hormonios-tdah" },
+  { title: "Autocompaixão prática", description: "Menos culpa, mais ajuste de sistema.", href: "/post/autocompaixao-pratica" },
 ];
 
 const curated = [
-  { title: "Checklist de consulta", excerpt: "Leve clareza para sua avaliação e economize energia.", href: "/post/checklist-consulta" },
-  { title: "Ferramentas e apps para TDAH", excerpt: "Como escolher e usar sem virar peso.", href: "/post/ferramentas-apps" },
-  { title: "Trilhas guiadas", excerpt: "Se você quer um caminho estruturado por objetivo.", href: "/trilhas" },
+  { title: "Regulação basal: antes de performance", excerpt: "Estabilizar o corpo e o ambiente para reduzir atrito.", href: "/post/regulacao-basal" },
+  { title: "Sono e TDAH", excerpt: "O básico que realmente mexe no dia seguinte.", href: "/post/sono-tdah" },
+  { title: "Regulação sensorial", excerpt: "Como prevenir sobrecarga e recuperar rápido.", href: "/post/regulacao-sensorial" },
 ];
 
 const faq = [
-  { q: "Vocês recomendam apps específicos?", a: "A ideia aqui é recomendar por função (captura, lembrete, rotina, execução) e não por modinha. O melhor app é o que você sustenta." },
-  { q: "Tenho pouco tempo. O que pego primeiro?", a: "Checklist de consulta (se você está em avaliação), ou Trilha de Regulação (se você está exausta), ou Estratégias (se o problema é execução)." },
-  { q: "Isso substitui tratamento?", a: "Não. Recursos ajudam, mas não substituem acompanhamento profissional quando necessário." },
+  { q: "Regulação é só emocional?", a: "Não. É emocional, fisiológica e sensorial. Sono, fome, estímulos e estresse mudam sua capacidade de iniciar e sustentar ação." },
+  { q: "Eu só funciono com pressão. Isso é normal?", a: "É comum, mas caro. Pressão vira combustível, mas cobra juros em ansiedade e exaustão. A meta é criar motivação funcional com menos sofrimento." },
+  { q: "Qual o 80/20 da regulação?", a: "Sono mais consistente, comida mínima previsível, reduzir estímulos agressivos e ter pausas curtas programadas. Pequeno, repetível, sustentado." },
 ];
+
+/* ====== Layout estilo “revista” ====== */
+const hero = {
+  kicker: "SEÇÃO",
+  title: "Regulação",
+  subtitle:
+    "Antes de exigir produtividade, estabilize energia, emoção e estímulos. Regulação é base, não “mimo”.",
+  image: "/hero/tdah.jpg",
+  alt: "Regulação no TDAH",
+};
+
+const quickRoutes = [
+  { title: "Ritmo e sono", desc: "O básico repetível que muda seu dia seguinte.", href: "#sono" },
+  { title: "Sensorial e sobrecarga", desc: "Prevenção, micro-pauses e recuperação rápida.", href: "#sensorial" },
+  { title: "Plano de 14 dias", desc: "Rotina mínima para sair do zero sem se quebrar.", href: "#plano" },
+];
+
+const steps = [
+  { title: "1) Baixe o volume do ambiente", text: "Menos estímulo agressivo (som, luz, notificações). O cérebro precisa de folga para cooperar." },
+  { title: "2) Garanta rotina mínima de energia", text: "Sono mais consistente + comida previsível + água. Simples, repetível, sustentável." },
+  { title: "3) Programe pausas curtas", text: "Micro-pausas de 2 a 5 min evitam o colapso de energia e irritação." },
+  { title: "4) Ajuste o sistema, não a identidade", text: "Regulação boa reduz culpa: você muda o contexto para facilitar o comportamento." },
+];
+
+/* ====== Artigos em destaque ====== */
+const featuredCardImages = [
+  "/hero/tdah.jpg",
+  "/hero/TDAH_sintomas.png",
+  "/hero/Diagnostico.jpg",
+  "/hero/comece-aqui.jpg",
+];
+
+const featuredHero = {
+  href: curated?.[0]?.href ?? "/post/regulacao-basal",
+  kicker: "BASE",
+  title: curated?.[0]?.title ?? "Regulação basal: antes de performance",
+  excerpt: curated?.[0]?.excerpt ?? "Estabilizar o corpo e o ambiente para reduzir atrito.",
+  image: featuredCardImages[0],
+  imageAlt: "Imagem de capa",
+};
+
+const featuredCards = [
+  {
+    href: curated?.[1]?.href ?? "/post/sono-tdah",
+    kicker: "SONO",
+    title: curated?.[1]?.title ?? "Sono e TDAH",
+    excerpt: curated?.[1]?.excerpt ?? "O básico que realmente mexe no dia seguinte.",
+    image: featuredCardImages[1],
+    imageAlt: "Imagem sobre sono",
+    variant: "green",
+  },
+  {
+    href: curated?.[2]?.href ?? "/post/regulacao-sensorial",
+    kicker: "SENSORIAL",
+    title: curated?.[2]?.title ?? "Regulação sensorial",
+    excerpt: curated?.[2]?.excerpt ?? "Como prevenir sobrecarga e recuperar rápido.",
+    image: featuredCardImages[2],
+    imageAlt: "Imagem sobre sensorial",
+    variant: "green",
+  },
+  {
+    href: "/trilhas",
+    kicker: "PLANO RÁPIDO",
+    title: "Roteiro de 14 dias",
+    excerpt: "Um microplano de regulação para sentir diferença sem “virar outra pessoa”.",
+    image: featuredCardImages[3],
+    imageAlt: "Imagem roteiro",
+    variant: "green",
+  },
+];
+
+const cta = {
+  title: "Quer um roteiro de 14 dias?",
+  text: "Um microplano de regulação para você sentir diferença sem precisar “virar outra pessoa”.",
+  primaryHref: "/trilhas",
+  primaryLabel: "Ver trilhas de regulação",
+  secondaryHref: "/post/regulacao-basal",
+  secondaryLabel: "Começar pelo basal",
+};
 ---
 
-<BaseLayout title={title} description={description}>
-  <div class="richtext-wrapper">
-    <h1>Recursos</h1>
-    <p class="muted">
-      Recursos aqui são para vida real: guias, checklists, ferramentas e caminhos de suporte.
-      O objetivo é reduzir atrito e te deixar mais funcional, não mais informada.
-    </p>
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogImage={ogImage}
+  ogType="website"
+>
+  <style>
+    .regWrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(18px, 4vw, 56px) 16px;
+      display: grid;
+      gap: clamp(18px, 3vw, 34px);
+    }
 
-    <hr />
+    .sectionTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.55rem, 2.3vw, 2.25rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px 0;
+      position: relative;
+    }
+    .sectionTitle::after {
+      content: "";
+      display: block;
+      width: 72px;
+      height: 2px;
+      margin-top: 12px;
+      background: rgba(170, 140, 255, 0.65);
+    }
 
-    <h2>O que você encontra aqui</h2>
-    <ul>
-      <li>Checklists e modelos simples.</li>
-      <li>Ferramentas por função (não por hype).</li>
-      <li>Leituras e trilhas guiadas por objetivo.</li>
-      <li>Orientações para família, trabalho e estudo.</li>
-    </ul>
+    .card {
+      background: rgba(45, 27, 78, 0.42);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      border-radius: 18px;
+      padding: clamp(16px, 3vw, 34px);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+    }
 
-    <h2>Clusters principais</h2>
-    <div style="display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
-      {clusters.map((c) => (
-        <a class="ds-card" href={c.href} style="padding: 14px; text-decoration:none;">
-          <strong style="display:block; margin-bottom:6px;">{c.title}</strong>
-          <span class="ds-muted" style="display:block; line-height:1.5;">{c.description}</span>
-        </a>
-      ))}
-    </div>
+    .muted {
+      color: rgba(246, 243, 255, 0.78);
+    }
 
-    <style>
-      @media (max-width: 760px) {
-        div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+    .anchor {
+      scroll-margin-top: 90px;
+    }
+
+    /* HERO */
+    .hero {
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      background: rgba(45, 27, 78, 0.92);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 980px) {
+      .hero {
+        grid-template-columns: 1.08fr 0.92fr;
+        min-height: 380px;
       }
-    </style>
+    }
 
-    <hr />
+    .heroText {
+      padding: clamp(18px, 3vw, 34px);
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
 
-    <h2>Recomendados</h2>
-    <div style="display:grid; gap: 12px;">
-      {curated.map((p) => (
-        <div class="ds-card">
-          <div class="ds-card-body">
-            <h3 style="margin:0 0 6px 0;">{p.title}</h3>
-            <p class="ds-muted" style="margin:0 0 12px 0;">{p.excerpt}</p>
-            <a class="ds-btn ds-btn-outline" href={p.href} style="width:auto;">Abrir</a>
-          </div>
+    .kicker {
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      opacity: 0.92;
+      color: rgba(246, 243, 255, 0.92);
+    }
+
+    .heroTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(2rem, 3.4vw, 3.1rem);
+      line-height: 1.04;
+      margin: 0;
+      color: #fff;
+    }
+
+    .heroSubtitle {
+      margin: 0;
+      line-height: 1.65;
+      color: rgba(246, 243, 255, 0.84);
+      max-width: 62ch;
+    }
+
+    .heroMedia {
+      position: relative;
+      min-height: 240px;
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .heroMedia img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .heroActions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .heroActions a {
+      text-decoration: none;
+    }
+
+    /* Rotas rápidas */
+    .grid3 {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 780px) {
+      .grid3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .routeCard {
+      background: rgba(45, 27, 78, 0.92);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      border-radius: 18px;
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+      height: 100%;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .routeTitle {
+      font-family: "Playfair Display", serif;
+      font-size: 1.25rem;
+      margin: 0;
+      color: #fff;
+      line-height: 1.12;
+    }
+
+    /* Clusters */
+    .clustersGrid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .clustersGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (min-width: 1024px) {
+      .clustersGrid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .clusterCard {
+      background: rgba(45, 27, 78, 0.92);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      border-radius: 18px;
+      padding: 16px;
+      text-decoration: none;
+      color: inherit;
+      display: grid;
+      gap: 8px;
+      height: 100%;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .clusterCard:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .clusterCard,
+      .clusterCard:hover {
+        transition: none;
+        transform: none;
+      }
+    }
+
+    .clusterTitle {
+      margin: 0;
+      font-weight: 780;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    /* Steps */
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .stepRow {
+      display: grid;
+      gap: 6px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(170, 140, 255, 0.18);
+    }
+    .stepRow:last-child {
+      border-bottom: none;
+    }
+
+    .stepTitle {
+      margin: 0;
+      font-weight: 760;
+      color: #fff;
+    }
+
+    .stepText {
+      margin: 0;
+      color: rgba(246, 243, 255, 0.78);
+      line-height: 1.6;
+      max-width: 72ch;
+    }
+
+    /* Featured */
+    .featuredWrap {
+      display: grid;
+      gap: 18px;
+    }
+
+    .featuredBig {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      background: rgba(45, 27, 78, 0.92);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+    }
+
+    .featuredBig a {
+      display: grid;
+      grid-template-columns: 1fr;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    @media (min-width: 980px) {
+      .featuredBig a {
+        grid-template-columns: 1.1fr 0.9fr;
+        min-height: 360px;
+      }
+    }
+
+    .featuredBigText {
+      padding: clamp(18px, 3vw, 34px);
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .featuredBigTitle {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+      line-height: 1.08;
+      margin: 0;
+      color: #fff;
+    }
+
+    .featuredBigExcerpt {
+      margin: 0;
+      line-height: 1.6;
+      color: rgba(246, 243, 255, 0.84);
+      max-width: 62ch;
+    }
+
+    .featuredBigMedia {
+      position: relative;
+      min-height: 240px;
+    }
+    .featuredBigMedia img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .magGrid3 {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+    @media (min-width: 780px) {
+      .magGrid3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .featuredWrap :global(a) {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .featuredWrap :global(.magCard img) {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .featuredWrap :global(.magCard--green) {
+      background: rgba(45, 27, 78, 0.92) !important;
+      border: 1px solid rgba(170, 140, 255, 0.22) !important;
+      color: #f6f3ff !important;
+      border-radius: 18px;
+      overflow: hidden;
+      height: 100%;
+    }
+    .featuredWrap :global(.magCard--green .ds-muted) {
+      color: rgba(246, 243, 255, 0.78) !important;
+    }
+
+    /* CTA */
+    .cta {
+      background: rgba(45, 27, 78, 0.35);
+      border: 1px solid rgba(170, 140, 255, 0.22);
+      display: grid;
+      gap: 14px;
+      align-items: center;
+      text-align: left;
+    }
+    .ctaActions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .ctaActions a {
+      text-decoration: none;
+    }
+    @media (min-width: 900px) {
+      .cta {
+        grid-template-columns: 1.3fr 0.7fr;
+      }
+      .ctaActions {
+        justify-content: flex-end;
+      }
+    }
+
+    /* FAQ */
+    .faqItem {
+      border-bottom: 1px solid rgba(170, 140, 255, 0.18);
+      padding: 14px 0;
+    }
+    .faqItem summary {
+      cursor: pointer;
+      font-weight: 700;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .faqItem summary::-webkit-details-marker {
+      display: none;
+    }
+  </style>
+
+  <!-- HERO -->
+  <section class="regWrap" style="padding-top: 22px;">
+    <header class="hero">
+      <div class="heroText">
+        <div class="kicker">{hero.kicker}</div>
+        <h1 class="heroTitle">{hero.title}</h1>
+        <p class="heroSubtitle">{hero.subtitle}</p>
+
+        <div class="heroActions">
+          <a class="ds-btn ds-btn-primary" href="#plano">Plano rápido</a>
+          <a class="ds-btn ds-btn-outline" href="/post/sono-tdah">Começar pelo sono</a>
         </div>
-      ))}
-    </div>
-
-    <hr />
-
-    <div class="ds-card ds-card--feature">
-      <div class="ds-card-body">
-        <div class="ds-badge">Atalho</div>
-        <h2 style="margin-top: 12px;">Quer um caminho guiado por tema?</h2>
-        <p class="ds-muted">
-          Trilhas organizam conteúdo por objetivo, com sequência e checkpoints.
-        </p>
-        <a class="ds-btn ds-btn-primary" href="/trilhas" style="max-width: 260px;">
-          Ver trilhas
-        </a>
       </div>
-    </div>
 
-    <hr />
+      <div class="heroMedia">
+        <img src={hero.image} alt={hero.alt} loading="eager" decoding="async" />
+      </div>
+    </header>
+  </section>
 
-    <h2>FAQ</h2>
-    {faq.map((item) => (
-      <details class="ds-card" style="padding: 14px; margin-bottom: 10px;">
-        <summary style="cursor:pointer; font-weight: 700;">{item.q}</summary>
-        <p class="ds-muted" style="margin: 10px 0 0 0;">{item.a}</p>
-      </details>
-    ))}
-  </div>
+  <main class="regWrap">
+    <!-- Rotas rápidas -->
+    <section class="card">
+      <h2 class="sectionTitle">Rotas rápidas</h2>
+      <div class="grid3">
+        {quickRoutes.map((r) => (
+          <a class="routeCard" href={r.href}>
+            <h3 class="routeTitle">{r.title}</h3>
+            <p class="muted" style="margin:0; line-height:1.55;">{r.desc}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Sono -->
+    <section id="sono" class="card anchor">
+      <h2 class="sectionTitle">Sono</h2>
+      <p class="muted" style="margin:0; line-height:1.7; max-width:72ch;">
+        O 80/20 normalmente começa aqui. Um sono mais consistente reduz reatividade,
+        melhora energia e aumenta chance de você conseguir iniciar tarefas.
+      </p>
+    </section>
+
+    <!-- Clusters -->
+    <section class="card">
+      <h2 class="sectionTitle">Clusters principais</h2>
+      <div class="clustersGrid">
+        {clusters.map((c) => (
+          <a class="clusterCard" href={c.href}>
+            <h3 class="clusterTitle">{c.title}</h3>
+            <p class="muted" style="margin:0; line-height:1.55;">{c.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Sensorial -->
+    <section id="sensorial" class="card anchor">
+      <h2 class="sectionTitle">Sensorial e sobrecarga</h2>
+      <p class="muted" style="margin:0; line-height:1.7; max-width:72ch;">
+        Quando o ambiente está agressivo, seu cérebro entra em modo defesa.
+        Ajuste de estímulo é estratégia de performance disfarçada de “cuidado”.
+      </p>
+    </section>
+
+    <!-- Plano -->
+    <section id="plano" class="card anchor">
+      <h2 class="sectionTitle">Plano rápido</h2>
+      <div class="steps">
+        {steps.map((s) => (
+          <div class="stepRow">
+            <h3 class="stepTitle">{s.title}</h3>
+            <p class="stepText">{s.text}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Artigos em destaque -->
+    <section>
+      <h2 class="sectionTitle">Artigos de destaque</h2>
+
+      <div class="featuredWrap">
+        <article class="featuredBig">
+          <a href={featuredHero.href}>
+            <div class="featuredBigText">
+              <div class="kicker">{featuredHero.kicker}</div>
+              <h3 class="featuredBigTitle">{featuredHero.title}</h3>
+              <p class="featuredBigExcerpt">{featuredHero.excerpt}</p>
+            </div>
+
+            <div class="featuredBigMedia">
+              <img
+                src={featuredHero.image}
+                alt={featuredHero.imageAlt}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </a>
+        </article>
+
+        <div class="magGrid3">
+          {featuredCards.map((c) => (
+            <MagCard {...c} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="card cta">
+      <div>
+        <h2 style="margin:0 0 8px 0; font-family:'Playfair Display',serif; color:#fff;">
+          {cta.title}
+        </h2>
+        <p class="muted" style="margin:0; line-height:1.7;">
+          {cta.text}
+        </p>
+      </div>
+
+      <div class="ctaActions">
+        <a class="ds-btn ds-btn-primary" href={cta.primaryHref}>{cta.primaryLabel}</a>
+        <a class="ds-btn ds-btn-outline" href={cta.secondaryHref}>{cta.secondaryLabel}</a>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="card">
+      <h2 class="sectionTitle">FAQ</h2>
+      {faq.map((item, idx) => (
+        <details class="faqItem" open={idx === 0}>
+          <summary>
+            <span>{item.q}</span>
+            <span aria-hidden="true" style="opacity:.8;">›</span>
+          </summary>
+          <p class="muted" style="margin:10px 0 0 0; line-height:1.7; max-width:72ch;">
+            {item.a}
+          </p>
+        </details>
+      ))}
+    </section>
+  </main>
 </BaseLayout>

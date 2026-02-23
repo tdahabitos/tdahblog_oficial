@@ -1,9 +1,10 @@
 ﻿---
+/* src/pages/comece-aqui.astro */
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ClusterCard from "../components/ClusterCard.astro";
 
-// 1) Troque SOMENTE este objeto por página
-const hub = {
+// Adicione EXPORT aqui para liberar os dados para o index
+export const hub = {
   slug: "comece-aqui",
   heroImage: "/hero/comece-aqui.jpg",
 
