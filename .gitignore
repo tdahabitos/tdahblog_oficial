@@ -11,3 +11,7 @@ dist/
 
 # logs
 *.log
+
+# Local snapshot
+_keep_blog/
+
