@@ -3,13 +3,13 @@ export const prerender = false;
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PostCard from "../components/PostCard.astro";
-import { searchPosts } from "../services/api";
+import { searchPostsPaged } from "../services/api"; // <-- troca aqui
 
 const q = Astro.url.searchParams.get("q") ?? "";
 const page = Number(Astro.url.searchParams.get("page") ?? "1");
 const PAGE_SIZE = 12;
 
-const data = q.trim() ? await searchPosts(q, { limit: PAGE_SIZE, page }) : null;
+const data = q.trim() ? await searchPostsPaged(q, { limit: PAGE_SIZE, page }) : null;
 
 function urlFor(p) {
   const params = new URLSearchParams();

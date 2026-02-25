@@ -1,72 +1,72 @@
 ﻿---
-import BaseLayout from '../../layouts/BaseLayout.astro'
-import { dateFormatter } from '../../lib/dayjs'
-import type { Post } from '../../types'
-import { apiFetcher } from '../../services/api'
-import { Frown } from 'lucide-react'
-import LazyImage from '../../components/lazy-image.astro'
+import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostCard from "../../components/PostCard.astro";
+import { getCategoryBySlug, getPostsByCategorySlugPaged } from "../../services/api";
 
-const { slug } = Astro.params
+export const prerender = false;
 
-const { posts, ...category } = await apiFetcher
-  .get(`/blog/categories/${slug}`)
-  .then((res) => res.data)
+const { slug } = Astro.params;
+if (!slug) throw new Error("Missing category slug");
+
+const page = Number(Astro.url.searchParams.get("page") ?? "1");
+const PAGE_SIZE = 12;
+
+const category = await getCategoryBySlug(slug);
+
+// Se não achou categoria, devolve um estado consistente
+const data = category
+  ? await getPostsByCategorySlugPaged(slug, { limit: PAGE_SIZE, page, sort: "-createdAt" })
+  : { docs: [], totalDocs: 0, limit: PAGE_SIZE, page, totalPages: 1 };
+
+function urlFor(p: number) {
+  const params = new URLSearchParams();
+  params.set("page", String(p));
+  return `/categoria/${slug}?${params.toString()}`;
+}
+
+const title = category?.title ? `Categoria: ${category.title}` : "Categoria";
+const description = category?.title
+  ? `Posts da categoria "${category.title}".`
+  : "Categoria não encontrada.";
 ---
 
-<BaseLayout
-  seo={{
-    title: category.title,
-    description: category.description,
-  }}
->
-  <div class="space-y-2 mb-8">
-    <h1 class="text-3xl font-bold">{category?.title}</h1>
-    <p class="text-xs opacity-75">{category?.description}</p>
-  </div>
-
-  {
-    posts?.length === 0 && (
-      <div class="w-full card bg-white/10 shadow-sm">
-        <div class="p-4">
-          <div class="flex items-center justify-center gap-2">
-            <Frown />
-            <p>Nenhum post encontrado</p>
-          </div>
-        </div>
+<BaseLayout title={title} description={description}>
+  {!category ? (
+    <section class="prose">
+      <h1>Categoria não encontrada</h1>
+      <p>Essa categoria não existe ou não está disponível.</p>
+      <a class="ds-btn ds-btn-outline" href="/posts">Ver todos os posts</a>
+    </section>
+  ) : (
+    <>
+      <div style="margin: 0 0 18px 0;">
+        <h1 style="margin: 0 0 6px 0;">{category.title}</h1>
+        {category?.slug ? (
+          <p class="ds-muted" style="margin:0;">/categoria/{category.slug}</p>
+        ) : null}
       </div>
-    )
-  }
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    {
-      posts?.map((post: Post) => (
-        <div class="w-full card bg-white/10 shadow-sm">
-          <a href={`/post/${post.slug}`} class="bg-gray-200 rounded-t-2xl">
-            <LazyImage
-              client:load
-              className="!w-full !h-64 object-cover rounded-t-2xl"
-              src={post.cover.url}
-              alt={post.title}
-            />
-          </a>
-          <div class="card-body">
-            <div class="flex justify-between items-center gap-2">
-              <h2 class="card-title">{post.title}</h2>
-              <span class="text-xs">{dateFormatter(post.createdAt)}</span>
-            </div>
-            <p class="mb-2">{post.description}</p>
-            <div class="card-actions">
-              <a
-                class="w-full btn btn-primary rounded-lg"
-                href={`/post/${post.slug}`}
-              >
-                Ver mais
-              </a>
-            </div>
-          </div>
-        </div>
-      ))
-    }
-  </div>
-</BaseLayout>
 
+      {data.totalDocs === 0 ? (
+        <div class="ds-card" style="padding: 16px;">
+          <p style="margin:0;">Nenhum post encontrado nesta categoria.</p>
+        </div>
+      ) : (
+        <>
+          <p class="ds-muted" style="margin: 0 0 14px 0;">{data.totalDocs} posts</p>
+
+          <section class="grid" style="display:grid; gap: 14px;">
+            {data.docs.map((post) => <PostCard post={post} />)}
+          </section>
+
+          {data.totalPages > 1 && (
+            <nav style="display:flex; gap: 10px; align-items:center; margin-top: 18px;" aria-label="Paginação da categoria">
+              {data.page > 1 && <a class="ds-btn ds-btn-outline" href={urlFor(data.page - 1)}>Anterior</a>}
+              <span class="ds-muted">Página {data.page} de {data.totalPages}</span>
+              {data.page < data.totalPages && <a class="ds-btn ds-btn-outline" href={urlFor(data.page + 1)}>Próxima</a>}
+            </nav>
+          )}
+        </>
+      )}
+    </>
+  )}
+</BaseLayout>
