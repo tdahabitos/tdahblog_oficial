@@ -1,24 +1,43 @@
-@'
----
-const { title, description, url, image, datePublished, dateModified } = Astro.props as {
-  title: string
-  description?: string
-  url: string
-  image?: string
-  datePublished?: string
-  dateModified?: string
-}
+﻿---
+export type SchemaArticleProps = {
+  headline: string;
+  description?: string;
+  image?: string;
+  datePublished?: string;
+  dateModified?: string;
+  authorName?: string;
+  url?: string;
+};
+
+const {
+  headline,
+  description,
+  image,
+  datePublished,
+  dateModified,
+  authorName,
+  url,
+} = Astro.props as SchemaArticleProps;
+
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, "") : "";
+const pageUrl = url ?? (Astro.url ? Astro.url.toString() : (siteUrl ? `${siteUrl}/` : ""));
+const imageUrl =
+  image && siteUrl && image.startsWith("/")
+    ? `${siteUrl}${image}`
+    : image;
 
 const data = {
   "@context": "https://schema.org",
   "@type": "Article",
-  mainEntityOfPage: url,
-  headline: title,
-  description: description ?? "",
-  image: image ? [image] : undefined,
-  datePublished,
-  dateModified: dateModified ?? datePublished,
+  headline,
+  ...(description ? { description } : {}),
+  ...(imageUrl ? { image: [imageUrl] } : {}),
+  ...(datePublished ? { datePublished } : {}),
+  ...(dateModified ? { dateModified } : {}),
+  ...(authorName ? { author: { "@type": "Person", name: authorName } } : {}),
+  ...(pageUrl ? { mainEntityOfPage: pageUrl } : {}),
+  ...(siteUrl ? { publisher: { "@type": "Organization", name: "TDAH.blog", url: siteUrl } } : {}),
 };
 ---
+
 <script type="application/ld+json">{JSON.stringify(data)}</script>
-'@ | Set-Content -LiteralPath ".\src\components\SchemaArticle.astro" -Encoding UTF8

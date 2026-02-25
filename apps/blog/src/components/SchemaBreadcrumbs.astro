@@ -1,20 +1,22 @@
-@'
----
-type Crumb = { name: string; item: string };
-const { items = [] } = Astro.props as { items?: Crumb[] };
+﻿---
+export type BreadcrumbItem = { name: string; url: string };
+
+const { items = [] } = Astro.props as { items?: BreadcrumbItem[] };
+
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, "") : "";
+const normalizeUrl = (u: string) =>
+  siteUrl && u.startsWith("/") ? `${siteUrl}${u}` : u;
 
 const data = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
-  itemListElement: items.map((c, idx) => ({
+  itemListElement: items.map((it, idx) => ({
     "@type": "ListItem",
     position: idx + 1,
-    name: c.name,
-    item: c.item
+    name: it.name,
+    item: normalizeUrl(it.url),
   })),
 };
 ---
-{items.length > 0 && (
-  <script type="application/ld+json">{JSON.stringify(data)}</script>
-)}
-'@ | Set-Content -LiteralPath ".\src\components\SchemaBreadcrumbs.astro" -Encoding UTF8
+
+<script type="application/ld+json">{JSON.stringify(data)}</script>
