@@ -1,5 +1,8 @@
 // src/lib/analytics.ts
 export function track(name: string, data?: any) {
+  // ✅ adicional necessário: evita rodar em SSR/build por acidente
+  if (typeof window === "undefined") return;
+
   try {
     const body = JSON.stringify({
       name,
@@ -19,6 +22,6 @@ export function track(name: string, data?: any) {
       headers: { "content-type": "application/json" },
       body,
       keepalive: true,
-    });
+    }).catch(() => {}); // ✅ adicional necessário: não vazar erro no console
   } catch {}
 }

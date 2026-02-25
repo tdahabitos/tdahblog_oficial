@@ -64,3 +64,102 @@ html, body {
   height: 100%;
 }
 /* ... manter o resto do arquivo original ... */
+/* =========================================================
+   DS Compatibility Layer (mínimas mudanças)
+   Objetivo: pages antigas com .btn/.card/.grid/.search
+   herdam o padrão DS sem refactor massivo.
+========================================================= */
+
+/* 2.1 Containers e tipografia base para páginas "soltas" */
+main {
+  max-width: var(--layout-containerMax, 1200px);
+  margin: 0 auto;
+  padding: 24px 18px;
+}
+
+/* 2.2 Botão compat: .btn -> estilo DS (sem mudar HTML) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 14px;
+  border-radius: 12px;
+
+  border: 1px solid var(--color-border, rgba(255,255,255,0.12));
+  background: var(--color-surface-2, rgba(255,255,255,0.06));
+  color: var(--color-text-primary, #fff);
+
+  text-decoration: none;
+  font-weight: 650;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: var(--color-border-strong, rgba(255,255,255,0.22));
+  background: var(--color-surface-3, rgba(255,255,255,0.10));
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--focus-ring, rgba(246, 229, 65, 0.95));
+  outline-offset: 3px;
+}
+
+/* 2.3 Card compat: .card -> ds-card */
+.card {
+  border-radius: var(--radius-3, 16px);
+  background: var(--color-surface-2, rgba(255,255,255,0.04));
+  border: 1px solid var(--color-border, rgba(255,255,255,0.08));
+  padding: 16px;
+}
+
+/* 2.4 Grid compat: .grid -> grid padrão para listas de cards */
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 720px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* 2.5 Form de busca compat: .search */
+.search {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 12px 0 18px;
+}
+
+.search input {
+  flex: 1 1 260px;
+  min-height: 40px;
+  padding: 10px 12px;
+
+  border-radius: 12px;
+  border: 1px solid var(--color-border, rgba(255,255,255,0.12));
+  background: var(--color-surface-1, rgba(255,255,255,0.03));
+  color: var(--color-text-primary, #fff);
+}
+
+.search input::placeholder {
+  color: var(--color-text-muted, rgba(255,255,255,0.6));
+}
+
+.search input:focus-visible {
+  outline: 2px solid var(--focus-ring, rgba(246, 229, 65, 0.95));
+  outline-offset: 3px;
+}
+
+/* 2.6 Paginação já existe em tdahblog.css, mas garante alinhamento */
+.pagination .btn {
+  text-decoration: none;
+}

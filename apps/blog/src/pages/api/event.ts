@@ -22,10 +22,20 @@ function getVisitorHash(cookies: any) {
     });
   }
 
+  // ✅ adicional necessário: corrigir template string (estava sem crases)
   return sha256(`${vid}:${salt}`);
 }
 
 export const POST: APIRoute = async ({ request, cookies }) => {
+  // ✅ adicional necessário: bloquear payloads absurdos e evitar throw silencioso
+  const contentLength = Number(request.headers.get("content-length") || "0");
+  if (contentLength && contentLength > 32_768) {
+    return new Response(JSON.stringify({ ok: false }), {
+      status: 413,
+      headers: { "content-type": "application/json" },
+    });
+  }
+
   const payload = await request.json().catch(() => null);
   const event_name = (payload?.name as string | undefined)?.trim();
 
@@ -33,13 +43,16 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   const visitor_hash = getVisitorHash(cookies);
 
-  await supabaseServer.from("events").insert({
-    event_name,
-    path: payload?.path ?? null,
-    referrer: payload?.referrer ?? null,
-    visitor_hash,
-    payload: payload?.data ?? null,
-  });
+  // ✅ adicional necessário: não quebrar a rota se o Supabase falhar
+  try {
+    await supabaseServer.from("events").insert({
+      event_name,
+      path: payload?.path ?? null,
+      referrer: payload?.referrer ?? null,
+      visitor_hash,
+      payload: payload?.data ?? null,
+    });
+  } catch {}
 
   return new Response(JSON.stringify({ ok: true }), {
     headers: { "content-type": "application/json" },

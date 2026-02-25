@@ -39,11 +39,14 @@ const {
 
   <body>
     <script is:inline>
-      try {
-        const saved = localStorage.getItem("theme");
-        if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
-        if (saved === "light") document.documentElement.removeAttribute("data-theme");
-      } catch {}
+      // ✅ adicional necessário: evita erro em SSR/build (localStorage só existe no browser)
+      if (typeof window !== "undefined") {
+        try {
+          const saved = localStorage.getItem("theme");
+          if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+          if (saved === "light") document.documentElement.removeAttribute("data-theme");
+        } catch {}
+      }
     </script>
 
     <style>
@@ -107,8 +110,11 @@ const {
         min-height: 56px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 14px;
+
+        /* ✅ AJUSTE: cabeçalho centralizado */
+        justify-content: center;
+
+        gap: 18px;
         overflow: visible;
       }
 
@@ -125,12 +131,17 @@ const {
       }
 
       .topbar-inner .nav{
-        margin-left: auto;
+        /* ✅ AJUSTE: não empurra para a direita */
+        margin-left: 0;
+
         width: max-content;
         flex: 0 0 auto;
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+
+        /* ✅ AJUSTE: mantém nav ao lado do logo */
+        justify-content: flex-start;
+
         gap: 12px;
         flex-wrap: nowrap;
         overflow: visible;
@@ -318,42 +329,45 @@ const {
     )}
 
     <script is:inline>
-      // Dropdown toggle
-      const dropdowns = document.querySelectorAll("[data-dropdown]");
-      dropdowns.forEach((dd) => {
-        const btn = dd.querySelector("[data-trigger]");
-        const close = () => {
-          dd.dataset.open = "false";
-          btn?.setAttribute("aria-expanded", "false");
-        };
-        const open = () => {
-          dd.dataset.open = "true";
-          btn?.setAttribute("aria-expanded", "true");
-        };
+      // ✅ adicional necessário: evita rodar em SSR/build por acidente
+      if (typeof window !== "undefined") {
+        // Dropdown toggle
+        const dropdowns = document.querySelectorAll("[data-dropdown]");
+        dropdowns.forEach((dd) => {
+          const btn = dd.querySelector("[data-trigger]");
+          const close = () => {
+            dd.dataset.open = "false";
+            btn?.setAttribute("aria-expanded", "false");
+          };
+          const open = () => {
+            dd.dataset.open = "true";
+            btn?.setAttribute("aria-expanded", "true");
+          };
 
-        btn?.addEventListener("click", (e) => {
-          e.stopPropagation();
-          dd.dataset.open === "true" ? close() : open();
+          btn?.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dd.dataset.open === "true" ? close() : open();
+          });
+
+          document.addEventListener("click", close);
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") close();
+          });
         });
 
-        document.addEventListener("click", close);
-        document.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") close();
+        // Tema persistente (data-theme="dark")
+        const toggle = document.getElementById("themeToggle");
+        toggle?.addEventListener("click", () => {
+          const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+          if (isDark) {
+            document.documentElement.removeAttribute("data-theme");
+            try { localStorage.setItem("theme", "light"); } catch {}
+          } else {
+            document.documentElement.setAttribute("data-theme", "dark");
+            try { localStorage.setItem("theme", "dark"); } catch {}
+          }
         });
-      });
-
-      // Tema persistente (data-theme="dark")
-      const toggle = document.getElementById("themeToggle");
-      toggle?.addEventListener("click", () => {
-        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-        if (isDark) {
-          document.documentElement.removeAttribute("data-theme");
-          try { localStorage.setItem("theme", "light"); } catch {}
-        } else {
-          document.documentElement.setAttribute("data-theme", "dark");
-          try { localStorage.setItem("theme", "dark"); } catch {}
-        }
-      });
+      }
     </script>
   </body>
 </html>
