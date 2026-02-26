@@ -17,11 +17,7 @@ const ogImage = hub.heroImage;
 const featuredRaw = Array.isArray(hub?.featured) ? hub.featured : [];
 
 // ✅ Imagens diferentes (atenção ao espaço no nome do arquivo)
-const featuredCardImages = [
-  "/hero/Diagnostico.jpg",
-  "/hero/TDAH_sintomas.png",
-  "/hero/tdah.jpg",
-];
+const featuredCardImages = ["/hero/Diagnostico.jpg", "/hero/TDAH_sintomas.png", "/hero/tdah.jpg"];
 
 // ✅ Card destaque grande (split)
 const featuredHero = {
@@ -59,40 +55,17 @@ const moreCards =
         excerpt: p?.desc ?? "",
         image:
           p?.image ??
-          [
-            "/hero/comece-aqui.jpg",
-            "/hero/Diagnostico.jpg",
-            "/hero/TDAH%20sintomas.png",
-            "/hero/tdah.jpg",
-          ][idx % 4],
+          ["/hero/comece-aqui.jpg", "/hero/Diagnostico.jpg", "/hero/TDAH%20sintomas.png", "/hero/tdah.jpg"][
+            idx % 4
+          ],
         imageAlt: p?.imageAlt ?? "",
         bgImage: p?.bgImage ?? "",
       }))
     : [
-        {
-          href: "/buscar",
-          title: "Mais artigos",
-          excerpt: "Veja mais conteúdos e trilhas.",
-          image: "/hero/comece-aqui.jpg",
-        },
-        {
-          href: "/ciencia",
-          title: "Ciência aplicada",
-          excerpt: "Evidências e explicações com pé no chão.",
-          image: "/hero/TDAH_sintomas.png",
-        },
-        {
-          href: "/estrategias",
-          title: "Estratégias reais",
-          excerpt: "Ferramentas práticas para rotina e foco.",
-          image: "/hero/tdah.jpg",
-        },
-        {
-          href: "/regulacao",
-          title: "Regulação",
-          excerpt: "Sono, energia, sensorial e sustentação.",
-          image: "/hero/Diagnostico.jpg",
-        },
+        { href: "/buscar", title: "Mais artigos", excerpt: "Veja mais conteúdos e trilhas.", image: "/hero/comece-aqui.jpg" },
+        { href: "/ciencia", title: "Ciência aplicada", excerpt: "Evidências e explicações com pé no chão.", image: "/hero/TDAH_sintomas.png" },
+        { href: "/estrategias", title: "Estratégias reais", excerpt: "Ferramentas práticas para rotina e foco.", image: "/hero/tdah.jpg" },
+        { href: "/regulacao", title: "Regulação", excerpt: "Sono, energia, sensorial e sustentação.", image: "/hero/Diagnostico.jpg" },
       ];
 ---
 
@@ -102,10 +75,9 @@ const moreCards =
   canonical={canonical}
   ogImage={ogImage}
   ogType="website"
+  hideFooter={true}
 >
   <style>
-    /* ====== A PARTIR DAQUI É SÓ “DO SEGUNDO PRINT PRA BAIXO” ====== */
-
     /* ✅ Header / dropdown não ser cortado (clipping) */
     :global(.site-header),
     :global(.ds-header),
@@ -121,7 +93,6 @@ const moreCards =
     :global(body > header nav) {
       overflow: visible;
     }
-    /* ✅ se algum wrapper estiver cortando dropdown */
     :global(#__astro),
     :global(#app),
     :global(.layout),
@@ -129,6 +100,18 @@ const moreCards =
     :global(.site),
     :global(.shell) {
       overflow: visible;
+    }
+
+    :root {
+      --card-radius-std: 22px;
+      --card-bg-std: rgba(45, 27, 78, 0.92);
+      --card-bg-std-hover: rgba(55, 30, 95, 0.92);
+      --card-border-std: rgba(170, 140, 255, 0.22);
+      --card-border-std-hover: rgba(170, 140, 255, 0.62);
+      --card-text-std: rgba(246, 243, 255, 0.92);
+      --card-muted-std: rgba(246, 243, 255, 0.78);
+
+      --hover-ring: rgba(170, 140, 255, 0.92);
     }
 
     .hubWrap {
@@ -168,12 +151,32 @@ const moreCards =
       opacity: 0.9;
     }
 
+    /* ✅ Base: cards (paleta roxa) */
     .nature-card {
-      background: var(--color-surface-1);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-card, 18px);
+      border-radius: var(--card-radius-std);
+      border: 1px solid var(--card-border-std);
+      background: var(--card-bg-std);
+      color: var(--card-text-std);
+
       padding: clamp(18px, 3.2vw, 40px);
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .nature-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(900px 420px at 18% 22%, rgba(221, 214, 255, 0.14), transparent 60%),
+        radial-gradient(700px 360px at 78% 18%, rgba(246, 229, 65, 0.06), transparent 62%);
+      pointer-events: none;
+    }
+
+    .nature-card > * {
+      position: relative;
+      z-index: 1;
     }
 
     .hubList {
@@ -206,20 +209,42 @@ const moreCards =
       }
     }
 
-    /* ✅ evita overflow/sobreposição em grids */
     .hubGrid--clusters :global(*),
     .magGrid3 :global(*) {
       min-width: 0;
     }
 
-    /* CTA grande */
+    /* ✅ CTA: aplicar “nature” só nele (paleta próxima, sem ficar transparente) */
     .hubCTA {
-      background: rgba(45, 27, 78, 0.35);
-      border: 1px solid rgba(170, 140, 255, 0.22);
+      border: 1px solid rgba(210, 233, 220, 0.18);
+      background: linear-gradient(
+        180deg,
+        rgba(28, 46, 38, 0.92) 0%,
+        rgba(20, 34, 29, 0.92) 100%
+      );
+      color: rgba(248, 250, 249, 0.92);
+
       display: grid;
       gap: 14px;
       align-items: center;
       text-align: left;
+    }
+
+    .hubCTA::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(900px 420px at 18% 22%, rgba(180, 230, 200, 0.14), transparent 60%),
+        radial-gradient(740px 420px at 76% 20%, rgba(255, 236, 180, 0.06), transparent 62%),
+        radial-gradient(900px 520px at 55% 110%, rgba(221, 214, 255, 0.05), transparent 62%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hubCTA > * {
+      position: relative;
+      z-index: 1;
     }
 
     .hubActions {
@@ -240,6 +265,48 @@ const moreCards =
       }
       .hubCTA .hubActions {
         justify-content: flex-end;
+      }
+    }
+
+    /* ✅ CTA buttons: mais escuros e consistentes */
+    .hubCTA .hubActions {
+      margin-top: 0;
+      gap: 14px;
+    }
+
+    .hubCTA .hubActions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      min-height: 44px;
+      padding: 12px 16px;
+      border-radius: 14px;
+    }
+
+    .hubCTA .hubActions :global(.ds-btn-primary),
+    .hubCTA .hubActions :global(.ds-btn--primary) {
+      background: rgba(12, 18, 16, 0.78) !important;
+      border-color: rgba(210, 233, 220, 0.18) !important;
+      color: rgba(248, 250, 249, 0.96) !important;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28) !important;
+    }
+
+    .hubCTA .hubActions :global(.ds-btn-outline),
+    .hubCTA .hubActions :global(.ds-btn--outline) {
+      background: rgba(12, 18, 16, 0.55) !important;
+      border-color: rgba(210, 233, 220, 0.22) !important;
+      color: rgba(248, 250, 249, 0.92) !important;
+    }
+
+    @media (max-width: 680px) {
+      .hubCTA {
+        grid-template-columns: 1fr !important;
+      }
+      .hubCTA .hubActions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
       }
     }
 
@@ -302,13 +369,11 @@ const moreCards =
       }
     }
 
-    /* remove underline geral dos cards */
     .magWrap :global(a) {
       text-decoration: none;
       color: inherit;
     }
 
-    /* ====== FEATURE SPLIT (card grande) ====== */
     .featureSplit {
       border-radius: 18px;
       overflow: hidden;
@@ -389,7 +454,6 @@ const moreCards =
       transition: transform 0.18s ease;
     }
 
-    /* MagCard: altura de imagem consistente */
     .magWrap :global(.magCard img) {
       width: 100%;
       height: 210px;
@@ -399,7 +463,6 @@ const moreCards =
       transition: transform 0.18s ease;
     }
 
-    /* Roxinho: pinta o variant green sem mexer no componente */
     .magWrap :global(.magCard--green) {
       background: rgba(45, 27, 78, 0.92) !important;
       border: 1px solid rgba(170, 140, 255, 0.22) !important;
@@ -413,12 +476,16 @@ const moreCards =
       color: rgba(246, 243, 255, 0.78) !important;
     }
 
-    /* ====== MORE FROM (faixa preta) ====== */
+    /* ====== MORE FROM (Nature lilás + footer dentro) ====== */
     .moreWrap {
       margin-top: 10px;
-      background: #0b0b0b;
-      color: #f2f2f2;
-      padding: 28px 0;
+      background:
+        radial-gradient(900px 520px at 18% 12%, rgba(221, 214, 255, 0.14), transparent 60%),
+        radial-gradient(820px 520px at 78% 20%, rgba(246, 229, 65, 0.06), transparent 62%),
+        linear-gradient(180deg, rgba(26, 22, 41, 0.92) 0%, rgba(18, 15, 29, 0.92) 100%);
+      border-top: 1px solid rgba(221, 214, 255, 0.14);
+      color: rgba(255, 255, 255, 0.92);
+      padding: 34px 0 18px;
     }
 
     .moreTitle {
@@ -444,7 +511,6 @@ const moreCards =
       }
     }
 
-    /* ✅ cards do “Mais do VivaTDAH” com miniaturas pequenas */
     .moreCard {
       display: grid;
       grid-template-columns: 96px 1fr;
@@ -507,7 +573,6 @@ const moreCards =
       min-width: 0;
     }
 
-    /* ✅ mobile bem pequeno: thumb menor para evitar “sobreposição” */
     @media (max-width: 420px) {
       .moreCard {
         grid-template-columns: 72px 1fr;
@@ -531,10 +596,16 @@ const moreCards =
       color: inherit;
     }
 
-    /* =========================================
-       HOVER (botões + cards) – “rover”
-       ========================================= */
+    .moreFooter {
+      max-width: 1100px;
+      margin: 18px auto 0;
+      padding: 14px 16px 0;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.72);
+      border-top: 1px solid rgba(221, 214, 255, 0.12);
+    }
 
+    /* HOVER */
     :global(.ds-btn),
     .featureSplit,
     .magWrap :global(.magCard--green),
@@ -547,18 +618,16 @@ const moreCards =
       will-change: transform;
     }
 
-    /* Botões */
     :global(.ds-btn:hover) {
       transform: translateY(-1px);
       filter: brightness(1.06) saturate(1.06);
-      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22), 0 0 0 2px var(--hover-ring);
     }
     :global(.ds-btn:active) {
       transform: translateY(0px);
       filter: brightness(0.98);
     }
 
-    /* ✅ Botões: mudança de cor (primary + outline) */
     :global(.ds-btn-outline:hover),
     :global(.ds-btn--outline:hover) {
       background: rgba(170, 140, 255, 0.14);
@@ -566,44 +635,42 @@ const moreCards =
     }
     :global(.ds-btn-primary:hover),
     :global(.ds-btn--primary:hover) {
-      box-shadow: 0 14px 30px rgba(170, 140, 255, 0.22), 0 12px 26px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 14px 30px rgba(170, 140, 255, 0.22), 0 12px 26px rgba(0, 0, 0, 0.22),
+        0 0 0 2px var(--hover-ring);
       filter: brightness(1.05) saturate(1.05);
     }
 
-    /* Cards (efeito leve de elevação + cor) */
     .featureSplit:hover,
     .moreCard:hover,
     .hubGrid--clusters :global(a:hover),
     .hubGrid--clusters :global(.clusterCard:hover),
     .featureLink:hover {
       transform: translateY(-3px);
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), 0 10px 30px rgba(170, 140, 255, 0.12);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), 0 10px 30px rgba(170, 140, 255, 0.12),
+        0 0 0 2px var(--hover-ring);
       border-color: rgba(170, 140, 255, 0.52);
       background: rgba(55, 30, 95, 0.92);
     }
 
-    /* ✅ MagCard green precisa de !important (já usa !important no base) */
     .magWrap :global(.magCard--green:hover) {
       transform: translateY(-3px);
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), 0 10px 30px rgba(170, 140, 255, 0.12);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), 0 10px 30px rgba(170, 140, 255, 0.12),
+        0 0 0 2px var(--hover-ring) !important;
       border-color: rgba(170, 140, 255, 0.52) !important;
       background: rgba(55, 30, 95, 0.92) !important;
     }
 
-    /* ✅ “Mais do VivaTDAH” destaca sem ficar pesado */
     .moreCard:hover {
       background: rgba(255, 255, 255, 0.04);
       border-color: rgba(170, 140, 255, 0.25);
     }
 
-    /* Imagem “respira” no hover (sutil) */
     .featureSplit:hover .featureMedia img,
     .magWrap :global(.magCard--green:hover img),
     .moreCard:hover .moreThumb img {
       transform: scale(1.02);
     }
 
-    /* Acessibilidade: foco visível (teclado) */
     :global(.ds-btn:focus-visible),
     .featureLink:focus-visible,
     .moreCard:focus-visible,
@@ -613,7 +680,6 @@ const moreCards =
       border-radius: 14px;
     }
 
-    /* Respeita redução de movimento */
     @media (prefers-reduced-motion: reduce) {
       :global(.ds-btn),
       .featureSplit,
@@ -632,258 +698,8 @@ const moreCards =
         transform: none !important;
       }
     }
-
-    /* =========================================================
-       ✅ ADD: CONTORNO FORTE (ring) mais forte que a cor do card
-       (somente adicionando, sem mexer no que já existe acima)
-       ========================================================= */
-    :root {
-      --hover-ring: rgba(170, 140, 255, 0.92);
-    }
-
-    :global(.ds-btn:hover) {
-      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.22), 0 0 0 2px var(--hover-ring);
-    }
-
-    :global(.ds-btn-primary:hover),
-    :global(.ds-btn--primary:hover) {
-      box-shadow: 0 14px 30px rgba(170, 140, 255, 0.22), 0 12px 26px rgba(0, 0, 0, 0.22),
-        0 0 0 2px var(--hover-ring);
-    }
-
-    .featureSplit:hover,
-    .moreCard:hover,
-    .hubGrid--clusters :global(a:hover),
-    .hubGrid--clusters :global(.clusterCard:hover),
-    .featureLink:hover {
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), 0 10px 30px rgba(170, 140, 255, 0.12),
-        0 0 0 2px var(--hover-ring);
-    }
-
-    .magWrap :global(.magCard--green:hover) {
-      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), 0 10px 30px rgba(170, 140, 255, 0.12),
-        0 0 0 2px var(--hover-ring) !important;
-    }
-
-    /* =========================================================
-       ✅ PADRONIZAÇÃO DE CARDS (modelo do print)
-       - imagem em cima + corpo embaixo
-       - raio/contorno/hover iguais
-       - tipografia por hierarquia
-       (somente adicionando overrides)
-       ========================================================= */
-
-    :root {
-      --card-radius-std: 22px;
-      --card-bg-std: rgba(45, 27, 78, 0.92);
-      --card-bg-std-hover: rgba(55, 30, 95, 0.92);
-      --card-border-std: rgba(170, 140, 255, 0.22);
-      --card-border-std-hover: rgba(170, 140, 255, 0.62);
-      --card-text-std: rgba(246, 243, 255, 0.92);
-      --card-muted-std: rgba(246, 243, 255, 0.78);
-    }
-
-    /* Base do “card padrão” aplicado em tudo que é card no index */
-    .featureSplit,
-    .magWrap :global(.magCard--green),
-    .hubGrid--clusters :global(a),
-    .moreCard {
-      border-radius: var(--card-radius-std) !important;
-      border: 1px solid var(--card-border-std) !important;
-      background: var(--card-bg-std) !important;
-      overflow: hidden !important;
-      color: var(--card-text-std) !important;
-    }
-
-    /* ==========================
-       FEATURE (vira modelo do print)
-       ========================== */
-    .featureSplit {
-      padding: 0 !important;
-    }
-
-    .featureLink {
-      grid-template-columns: 1fr !important; /* tira o split */
-      min-height: 0 !important;
-    }
-
-    .featureMedia {
-      order: -1; /* imagem primeiro */
-      min-height: 200px !important;
-      background: rgba(0, 0, 0, 0.08);
-    }
-
-    .featureText {
-      padding: 16px 18px 20px !important;
-    }
-
-    .featureKicker {
-      font-size: 0.78rem !important;
-      letter-spacing: 0.12em !important;
-      text-transform: uppercase !important;
-      color: rgba(246, 243, 255, 0.9) !important;
-      margin: 0 0 6px 0;
-    }
-
-    .featureTitle {
-      font-size: clamp(1.55rem, 2.2vw, 2.05rem) !important;
-      line-height: 1.12 !important;
-      letter-spacing: -0.01em !important;
-    }
-
-    .featureExcerpt {
-      color: var(--card-muted-std) !important;
-      opacity: 1 !important;
-      margin-top: 4px !important;
-    }
-
-    .featureMedia img {
-      transform-origin: center;
-    }
-
-    /* ==========================
-       MAGCARD (garante “imagem em cima + corpo embaixo”)
-       ========================== */
-    .magWrap :global(.magCard--green) {
-      padding: 0 !important;
-      height: 100%;
-    }
-
-    /* tentativa segura: a maioria dos componentes tem um wrapper div após a imagem */
-    .magWrap :global(.magCard--green > div) {
-      padding: 16px 18px 20px !important;
-      min-width: 0;
-    }
-
-    .magWrap :global(.magCard--green h3) {
-      font-family: "Playfair Display", serif !important;
-      font-size: 1.75rem !important;
-      line-height: 1.12 !important;
-      margin: 0 !important;
-      color: #fff !important;
-      letter-spacing: -0.01em !important;
-    }
-
-    .magWrap :global(.magCard--green .ds-muted) {
-      color: var(--card-muted-std) !important;
-      opacity: 1 !important;
-      margin-top: 10px !important;
-    }
-
-    /* kicker (funciona mesmo que o componente use classes diferentes) */
-    .magWrap :global(.magCard--green [class*="kicker"]),
-    .magWrap :global(.magCard--green [class*="Kicker"]),
-    .magWrap :global(.magCard--green .ds-badge),
-    .magWrap :global(.magCard--green .ds-kicker),
-    .magWrap :global(.magCard--green .ds-overline) {
-      font-weight: 750 !important;
-      letter-spacing: 0.12em !important;
-      text-transform: uppercase !important;
-      font-size: 0.78rem !important;
-      color: rgba(246, 243, 255, 0.9) !important;
-    }
-
-    /* ==========================
-       CLUSTERS (padroniza visual, sem inventar imagem)
-       ========================== */
-    .hubGrid--clusters :global(a) {
-      text-decoration: none !important;
-      display: grid !important;
-      gap: 10px !important;
-      align-content: start !important;
-      padding: 16px 18px 20px !important;
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18) !important;
-    }
-
-    .hubGrid--clusters :global(a:hover) {
-      background: var(--card-bg-std-hover) !important;
-      border-color: var(--card-border-std-hover) !important;
-    }
-
-    .hubGrid--clusters :global(h3),
-    .hubGrid--clusters :global(h4),
-    .hubGrid--clusters :global(strong) {
-      font-family: "Playfair Display", serif !important;
-      font-weight: 700 !important;
-      color: #fff !important;
-      letter-spacing: -0.01em !important;
-      margin: 0 !important;
-    }
-
-    .hubGrid--clusters :global(p),
-    .hubGrid--clusters :global(.ds-muted),
-    .hubGrid--clusters :global(span) {
-      color: var(--card-muted-std) !important;
-    }
-
-    /* ==========================
-       MAIS DO VIVATDAH (vira card do print)
-       ========================== */
-    .moreGrid {
-      border-top: none !important;
-      gap: 18px !important;
-    }
-
-    .moreCard {
-      grid-template-columns: 1fr !important;
-      gap: 0 !important;
-      padding: 0 !important;
-      border-left: none !important;
-      border-bottom: none !important;
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18) !important;
-    }
-
-    @media (min-width: 800px) {
-      .moreGrid {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-      }
-    }
-
-    .moreThumb {
-      width: 100% !important;
-      height: auto !important;
-      aspect-ratio: 16 / 9;
-      border-radius: 0 !important;
-    }
-
-    .moreThumb img {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover !important;
-    }
-
-    /* o 2º bloco do anchor vira “corpo do card” */
-    .moreCard > div:nth-child(2) {
-      padding: 16px 18px 20px !important;
-      min-width: 0;
-    }
-
-    .moreCardTitle {
-      font-size: 1.55rem !important;
-      line-height: 1.12 !important;
-      letter-spacing: -0.01em !important;
-      margin: 0 !important;
-      color: #fff !important;
-    }
-
-    .moreCardExcerpt {
-      color: var(--card-muted-std) !important;
-      opacity: 1 !important;
-      margin-top: 10px !important;
-      -webkit-line-clamp: 3 !important;
-    }
-
-    /* hover consistente + contorno forte */
-    .featureSplit:hover,
-    .magWrap :global(.magCard--green:hover),
-    .hubGrid--clusters :global(a:hover),
-    .moreCard:hover {
-      border-color: var(--card-border-std-hover) !important;
-      background: var(--card-bg-std-hover) !important;
-    }
   </style>
 
-  <!-- ✅ HERO (1º print) intacto -->
   <LeadBox />
 
   <main id="explore-section" class="hubWrap">
@@ -908,12 +724,10 @@ const moreCards =
       </div>
     </section>
 
-    <!-- ✅ Artigos de Destaque -->
     <section>
       <h2 class="hubSectionTitle">Artigos de Destaque</h2>
 
       <div class="magWrap">
-        <!-- Card grande split -->
         <article class="featureSplit">
           <a class="featureLink" href={featuredHero.href}>
             <div class="featureText">
@@ -930,17 +744,11 @@ const moreCards =
             </div>
 
             <div class="featureMedia">
-              <img
-                src={featuredHero.image}
-                alt={featuredHero.imageAlt}
-                loading="lazy"
-                decoding="async"
-              />
+              <img src={featuredHero.image} alt={featuredHero.imageAlt} loading="lazy" decoding="async" />
             </div>
           </a>
         </article>
 
-        <!-- até 3 cards -->
         <div class="magGrid3">
           {featuredCards.map((c) => (
             <MagCard {...c} />
@@ -949,7 +757,7 @@ const moreCards =
       </div>
     </section>
 
-    <section class="nature-card hubCTA">
+    <section class="nature-card hubCTA hubNarrow">
       <div>
         <h2 style="margin: 0 0 8px 0;">{hub.cta.title}</h2>
         <p class="ds-muted" style="margin: 0; line-height: 1.7;">{hub.cta.text}</p>
@@ -980,7 +788,6 @@ const moreCards =
     </section>
   </main>
 
-  <!-- ✅ “Mais do VivaTDAH” com thumbs pequenos -->
   <section class="moreWrap" aria-label="Mais conteúdos">
     <h2 class="moreTitle">Mais do VivaTDAH</h2>
 
@@ -997,5 +804,7 @@ const moreCards =
         </a>
       ))}
     </div>
+
+    <div class="moreFooter">© {new Date().getFullYear()} VivaTDAH — Todos os direitos reservados</div>
   </section>
 </BaseLayout>

@@ -57,8 +57,11 @@ const {
         --lav-700: #4d398c;
         --sun-400: #f6e541;
 
-        --topbar-bg: #0b0b0c;
+        --topbar-bg: linear-gradient(180deg, #0b0b0c 0%, #14141a 100%);
         --topbar-border: rgba(221, 214, 255, 0.16);
+
+        /* ✅ ADD: fundo da página continua o “clima” do header */
+        --page-bg: linear-gradient(180deg, #0b0b0c 0%, #14141a 320px, var(--color-surface-0, #14141a) 720px);
 
         --brand-color: #ffffff;
 
@@ -80,8 +83,11 @@ const {
       }
 
       html[data-theme="dark"] {
-        --topbar-bg: #262646;
+        --topbar-bg: linear-gradient(180deg, #262646 0%, #1b1b33 100%);
         --topbar-border: rgba(221, 214, 255, 0.14);
+
+        /* ✅ ADD: fundo da página (dark) */
+        --page-bg: linear-gradient(180deg, #262646 0%, #1b1b33 320px, var(--color-surface-0, #120f1d) 720px);
 
         --pill-bg: rgba(77, 57, 140, 0.28);
         --pill-border: rgba(221, 214, 255, 0.32);
@@ -92,7 +98,13 @@ const {
         --menu-border: rgba(221, 214, 255, 0.16);
       }
 
-      body { margin: 0; }
+      /* ✅ ADD: fallback de fundo sem “matar” o global.css */
+      html { background: var(--page-bg); }
+
+      body {
+        margin: 0;
+        /* ✅ REMOVIDO: não força background aqui (global.css fica como fonte da verdade) */
+      }
 
       .topbar {
         position: sticky;
@@ -101,26 +113,27 @@ const {
         background: var(--topbar-bg);
         border-bottom: 1px solid var(--topbar-border);
         overflow: visible;
+        padding-bottom: 0;
       }
 
+      main.w-full.flex-1 { padding-top: 0 !important; }
+      main.w-full.flex-1 > :first-child { margin-top: 0 !important; padding-top: 0 !important; }
+
       .topbar-inner {
-        max-width: var(--layout-containerMax);
+        max-width: 980px;
         margin: 0 auto;
         padding: 0 18px;
         min-height: 56px;
         display: flex;
         align-items: center;
-
-        /* ✅ AJUSTE: aproxima logo e botões */
-        justify-content: center;
-        gap: 18px;
-
+        justify-content: space-between;
+        gap: 14px;
         overflow: visible;
       }
 
       .brand {
         /* ✅ AJUSTE: Fonte estilo Nature */
-        font-family: 'Playfair Display', serif; 
+        font-family: 'Playfair Display', serif;
         color: var(--brand-color);
         text-decoration: none;
         font-weight: 700;
@@ -131,17 +144,12 @@ const {
       }
 
       .topbar-inner .nav{
-        /* ✅ AJUSTE: não empurra para a direita */
-        margin-left: 0;
-
+        margin-left: auto;
         width: max-content;
         flex: 0 0 auto;
         display: flex;
         align-items: center;
-
-        /* ✅ AJUSTE: mantém nav ao lado do logo */
-        justify-content: flex-start;
-
+        justify-content: flex-end;
         gap: 12px;
         flex-wrap: nowrap;
         overflow: visible;
@@ -246,13 +254,23 @@ const {
 
       @media (max-width: 740px) {
         .topbar-inner {
-          align-items: flex-start;
-          padding: 8px 18px;
+          flex-wrap: wrap;
+          justify-content: center;
+          padding: 10px 12px;
+          gap: 10px;
           min-height: 0;
+          align-items: center;
+        }
+        .brand {
+          width: 100%;
+          text-align: center;
         }
         .topbar-inner .nav {
+          width: 100%;
+          margin-left: 0;
           flex-wrap: wrap;
-          justify-content: flex-start;
+          justify-content: center;
+          gap: 10px;
         }
       }
     </style>
