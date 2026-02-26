@@ -63,6 +63,31 @@ html[data-theme="dark"] {
 html, body {
   height: 100%;
 }
+
+/* ✅ ADD (mínimo necessário): fundo acolhedor “nature lilás” (LIGHT) preenchendo tudo */
+body{
+  background-color: var(--_bg);
+  background-image:
+    radial-gradient(900px 520px at 18% 12%, rgba(221, 214, 255, 0.28), transparent 60%),
+    radial-gradient(820px 520px at 70% 18%, rgba(246, 229, 65, 0.08), transparent 62%),
+    radial-gradient(900px 700px at 50% 82%, rgba(247, 206, 210, 0.10), transparent 60%),
+    linear-gradient(180deg, rgba(221,214,255,0.35) 0%, rgba(247,247,247,1) 55%, rgba(255,255,255,1) 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* ✅ ADD (mínimo necessário): fundo acolhedor “nature lilás” (DARK) preenchendo tudo */
+html[data-theme="dark"] body{
+  background-color: var(--_bg);
+  background-image:
+    radial-gradient(900px 520px at 18% 12%, rgba(155, 138, 216, 0.18), transparent 60%),
+    radial-gradient(820px 520px at 70% 18%, rgba(246, 229, 65, 0.06), transparent 62%),
+    radial-gradient(900px 700px at 50% 82%, rgba(247, 206, 210, 0.06), transparent 60%),
+    linear-gradient(180deg, #1b1b33 0%, #120f1d 55%, #0d0b12 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 /* ... manter o resto do arquivo original ... */
 /* =========================================================
    DS Compatibility Layer (mínimas mudanças)
@@ -163,3 +188,6 @@ main {
 .pagination .btn {
   text-decoration: none;
 }
+
+/* hide Nature Outlook badge */
+.nature-outlook-badge{display:none!important;}
