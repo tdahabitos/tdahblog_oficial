@@ -1,4 +1,4 @@
----
+﻿---
 interface Props {
   title?: string;
   description?: string;
@@ -10,14 +10,14 @@ interface Props {
 
 const {
   title = "VivaTDAH",
-  description = "Conteúdo informativo e acessível sobre TDAH",
+  description = "ConteÃºdo informativo e acessÃ­vel sobre TDAH",
   canonical,
   ogImage,
   ogType = "website",
   noindex = false,
 } = Astro.props as Props;
 
-// ✅ Canonical: prioriza pathname (sem query/hash) + Astro.site quando existir
+// âœ… Canonical: prioriza pathname (sem query/hash) + Astro.site quando existir
 const canonicalUrl =
   canonical ??
   (Astro.site
@@ -35,7 +35,7 @@ const ogUrl =
 
 const robots = noindex ? "noindex,nofollow" : "index,follow";
 
-// ✅ Padrão “Nature-like”: motion leve (sem inventar cores)
+// âœ… PadrÃ£o â€œNature-likeâ€: motion leve (sem inventar cores)
 const motionFast = "120ms";
 const motionNormal = "200ms";
 const motionEasing = "cubic-bezier(0.4, 0, 0.2, 1)";
@@ -66,13 +66,13 @@ const motionEasing = "cubic-bezier(0.4, 0, 0.2, 1)";
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogUrl} />
 
-  <!-- ✅ Base CSS (ordem importa) -->
+  <!-- âœ… Base CSS (ordem importa) -->
   <link rel="stylesheet" href="/assets/tdahblog/tokens.css" />
   <link rel="stylesheet" href="/assets/tdahblog/tokens.dark.css" />
   <link rel="stylesheet" href="/assets/tdahblog/global.css" />
   <link rel="stylesheet" href="/assets/tdahblog/prose.css" />
 
-  <!-- ✅ Fonts -->
+  <!-- âœ… Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -85,7 +85,7 @@ const motionEasing = "cubic-bezier(0.4, 0, 0.2, 1)";
   />
 
   <style>
-    /* ✅ Base: deixa tokens mandarem nas cores */
+    /* âœ… Base: deixa tokens mandarem nas cores */
     html {
       font-family: "Inter", system-ui, -apple-system, sans-serif;
       background: var(--color-surface-0);
@@ -97,14 +97,14 @@ const motionEasing = "cubic-bezier(0.4, 0, 0.2, 1)";
     }
     body { margin: 0; }
 
-    /* ✅ Motion global leve */
+    /* âœ… Motion global leve */
     :root{
-      --motion-fast: ${motionFast};
-      --motion-normal: ${motionNormal};
-      --motion-easing: ${motionEasing};
+      --motion-fast: var(--motion-fast, 120ms);
+      --motion-normal: var(--motion-normal, 200ms);
+      --motion-easing: var(--motion-easing, cubic-bezier(0.4, 0, 0.2, 1));
     }
 
-    /* ✅ Evita recorte / sobreposição do dropdown */
+    /* âœ… Evita recorte / sobreposiÃ§Ã£o do dropdown */
     header.topbar,
     header.topbar .topbar-inner,
     header.topbar nav.nav,
@@ -117,8 +117,8 @@ const motionEasing = "cubic-bezier(0.4, 0, 0.2, 1)";
       z-index: 999;
     }
 
-    /* ✅ Hover “calmo” e consistente (só para elementos nativos/antigos)
-       Nota: o grosso do estilo está no global.css; aqui é só safety net. */
+    /* âœ… Hover â€œcalmoâ€ e consistente (sÃ³ para elementos nativos/antigos)
+       Nota: o grosso do estilo estÃ¡ no global.css; aqui Ã© sÃ³ safety net. */
     a:hover {
       text-decoration: underline;
       text-underline-offset: 3px;
@@ -130,7 +130,7 @@ const motionEasing = "cubic-bezier(0.4, 0, 0.2, 1)";
       outline-offset: 3px;
     }
 
-    /* ✅ iOS: garante tap highlight discreto */
+    /* âœ… iOS: garante tap highlight discreto */
     :where(a, button, .btn) { -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
