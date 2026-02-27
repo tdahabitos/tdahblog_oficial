@@ -1,11 +1,11 @@
 ---
 interface Props {
-  title?: string
-  description?: string
-  canonical?: string
-  ogImage?: string
-  ogType?: "website" | "article"
-  noindex?: boolean
+  title?: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: "website" | "article";
+  noindex?: boolean;
 }
 
 const {
@@ -15,22 +15,30 @@ const {
   ogImage,
   ogType = "website",
   noindex = false,
-} = Astro.props as Props
+} = Astro.props as Props;
 
+// ✅ Canonical: prioriza pathname (sem query/hash) + Astro.site quando existir
 const canonicalUrl =
   canonical ??
   (Astro.site
     ? new URL(Astro.url.pathname, Astro.site).toString()
-    : Astro.url.toString())
+    : Astro.url.toString());
 
-const defaultOg = "/og-placeholder.jpg"
-const ogPath = ogImage || defaultOg
+const defaultOg = "/og-placeholder.jpg";
+const ogPath = ogImage || defaultOg;
 const ogUrl =
   /^https?:\/\//i.test(ogPath)
     ? ogPath
-    : (Astro.site ? new URL(ogPath, Astro.site).toString() : ogPath)
+    : Astro.site
+      ? new URL(ogPath, Astro.site).toString()
+      : ogPath;
 
-const robots = noindex ? "noindex,nofollow" : "index,follow"
+const robots = noindex ? "noindex,nofollow" : "index,follow";
+
+// ✅ Padrão “Nature-like”: motion leve (sem inventar cores)
+const motionFast = "120ms";
+const motionNormal = "200ms";
+const motionEasing = "cubic-bezier(0.4, 0, 0.2, 1)";
 ---
 
 <head>
@@ -77,13 +85,26 @@ const robots = noindex ? "noindex,nofollow" : "index,follow"
   />
 
   <style>
+    /* ✅ Base: deixa tokens mandarem nas cores */
     html {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
       background: var(--color-surface-0);
       color: var(--color-text-primary);
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
     }
     body { margin: 0; }
 
+    /* ✅ Motion global leve */
+    :root{
+      --motion-fast: ${motionFast};
+      --motion-normal: ${motionNormal};
+      --motion-easing: ${motionEasing};
+    }
+
+    /* ✅ Evita recorte / sobreposição do dropdown */
     header.topbar,
     header.topbar .topbar-inner,
     header.topbar nav.nav,
@@ -95,5 +116,21 @@ const robots = noindex ? "noindex,nofollow" : "index,follow"
       position: absolute;
       z-index: 999;
     }
+
+    /* ✅ Hover “calmo” e consistente (só para elementos nativos/antigos)
+       Nota: o grosso do estilo está no global.css; aqui é só safety net. */
+    a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+    }
+
+    :where(a, button, input, textarea, select, summary, [role="button"]):focus-visible{
+      outline: 2px solid var(--focus-ring, var(--color-focus, rgba(246,229,65,.95)));
+      outline-offset: 3px;
+    }
+
+    /* ✅ iOS: garante tap highlight discreto */
+    :where(a, button, .btn) { -webkit-tap-highlight-color: transparent; }
   </style>
 </head>

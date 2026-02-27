@@ -3,6 +3,9 @@
    Ativado via: <html data-theme="dark">
    Compatível com tokens.css (Light)
    Estética: Nature Lilás Profundo
+   (Ajustes adicionados: Nature-like UI vars
+    para botões/cards/hover/focus/sombras,
+    sem quebrar tokens existentes)
 ========================================== */
 
 :root[data-theme="dark"] {
@@ -50,4 +53,53 @@
   --_surface-1: var(--color-surface-1);
   --_surface-2: var(--color-surface-2);
   --_border: var(--color-border);
+
+  /* =========================================================
+     ADDITIONS — Nature-like UI (Dark)
+     Objetivo:
+     - underline só no hover (estilo vem no CSS, aqui só cores)
+     - borda só no hover (tokens dedicados)
+     - botões e links com “peso” e calma (pill tokens)
+     - cards com sombra suave (Nature vibe)
+     - azul claro sutil como acento complementar
+     - nomes compatíveis com o que já apareceu no repo: focus-ring, pill-*
+  ========================================================= */
+
+  /* Accent complementar (azul claro, leve) — fica mais “frio” no dark */
+  --color-accent-softBlue: #7FC4FF;
+  --color-accent-softBlue-whisper: rgba(127, 196, 255, 0.18);
+
+  /* Focus ring (nome usado no BaseLayout/global) */
+  --focus-ring: rgba(246, 229, 65, 0.95);
+
+  /* Bordas: “idle” invisível e “hover” visível (regra: borda só no hover) */
+  --color-border-idle: transparent;
+  --color-border-strong: rgba(155, 138, 216, 0.28);
+  --color-border-hover: rgba(246, 229, 65, 0.22);
+
+  /* Shadows (Nature-like, suaves) */
+  --shadow-card: 0 14px 34px rgba(0, 0, 0, 0.42);
+  --shadow-card-hover: 0 18px 46px rgba(0, 0, 0, 0.52);
+
+  /* Superfícies “sempre levemente diferente” (cards/boxes) */
+  --color-surface-card: rgba(255, 255, 255, 0.06);
+  --color-surface-card-2: rgba(255, 255, 255, 0.08);
+  --color-surface-card-hover: rgba(255, 255, 255, 0.10);
+
+  /* Pills / Buttons (nomes usados no BaseLayout.astro) */
+  --pill-bg: rgba(155, 138, 216, 0.14);
+  --pill-border: rgba(155, 138, 216, 0.22);
+  --pill-text: var(--color-text-primary);
+
+  --pill-bg-hover: rgba(155, 138, 216, 0.20);
+  --pill-border-hover: rgba(246, 229, 65, 0.30);
+
+  /* Links “parecem botão/texto mais forte” */
+  --link-weight: 650;
+
+  /* Radius Nature para blocos (sem conflitar com radius-card=0) */
+  --radius-nature: 6px;
+
+  /* Layout: container mais “Nature” (sem mudar seus valores atuais) */
+  --layout-containerMaxWide: 980px; /* opcional para wrappers do app */
 }

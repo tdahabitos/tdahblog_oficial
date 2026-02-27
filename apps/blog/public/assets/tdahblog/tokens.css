@@ -1,6 +1,9 @@
 /* ==========================================
    VivaTDAH — Design Tokens (Light)
    Paleta: Nature Lavender (Ajustada)
+   (Ajustes adicionados: Nature-like UI vars
+    para botões/cards/hover/focus/sombras,
+    sem quebrar tokens existentes)
 ========================================== */
 
 :root {
@@ -131,4 +134,53 @@
   --_surface-1: var(--color-surface-1);
   --_surface-2: var(--color-surface-2);
   --_border: var(--color-border);
+
+  /* =========================================================
+     ADDITIONS — Nature-like UI (para alinhar global.css/prose.css)
+     Objetivo:
+     - underline só no hover (estilo vem no CSS, aqui só cores)
+     - borda só no hover (tokens dedicados)
+     - botões e links com “peso” e calma (pill tokens)
+     - cards com sombra suave (Nature vibe)
+     - azul claro sutil como acento complementar
+     - nomes compatíveis com o que já apareceu no repo: focus-ring, pill-*
+  ========================================================= */
+
+  /* Accent complementar (azul claro, leve) */
+  --color-accent-softBlue: #A9D6FF;
+  --color-accent-softBlue-whisper: rgba(169, 214, 255, 0.22);
+
+  /* Focus ring (nome usado no BaseLayout/global) */
+  --focus-ring: rgba(246, 229, 65, 0.95);
+
+  /* Bordas: “idle” invisível e “hover” visível (regra: borda só no hover) */
+  --color-border-idle: transparent;
+  --color-border-strong: rgba(155, 138, 216, 0.32);
+  --color-border-hover: rgba(110, 66, 167, 0.42);
+
+  /* Shadows (Nature-like, suaves) */
+  --shadow-card: 0 12px 30px rgba(0, 0, 0, 0.10);
+  --shadow-card-hover: 0 16px 38px rgba(0, 0, 0, 0.14);
+
+  /* Superfícies “sempre levemente diferente” (para fundos de cards/boxes) */
+  --color-surface-card: rgba(255, 255, 255, 0.70);
+  --color-surface-card-2: rgba(255, 255, 255, 0.52);
+  --color-surface-card-hover: rgba(255, 255, 255, 0.78);
+
+  /* Pills / Buttons (nomes usados no BaseLayout.astro) */
+  --pill-bg: rgba(110, 66, 167, 0.10);
+  --pill-border: rgba(155, 138, 216, 0.20);
+  --pill-text: var(--color-text-primary);
+
+  --pill-bg-hover: rgba(110, 66, 167, 0.14);
+  --pill-border-hover: rgba(110, 66, 167, 0.42);
+
+  /* Links “parecem botão/texto mais forte” */
+  --link-weight: 650;
+
+  /* Radius Nature para blocos (sem conflitar com radius-card=0) */
+  --radius-nature: 6px;
+
+  /* Layout: container mais “Nature” (sem mudar seus valores atuais) */
+  --layout-containerMaxWide: 980px; /* opcional para wrappers do app */
 }
