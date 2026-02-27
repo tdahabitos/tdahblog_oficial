@@ -2,6 +2,9 @@
    VivaTDAH — Prose (Rich Text)
    Estilo editorial para páginas de artigo
    (alinhado ao design tokens + paleta)
+   Ajustes: Nature-like (lilás + branco + azul claro),
+   mobile-first, leve, underline só no hover,
+   borda só no hover, cards/boxes com sombra suave.
 ========================================== */
 
 /* Fallbacks locais (se algum token não existir) */
@@ -23,6 +26,44 @@
   --_link: var(--color-brand-primary, var(--pal-pri-800));
   --_linkHover: var(--color-brand-secondary, var(--pal-pri-600));
   --_accent: var(--color-brand-soft, var(--pal-sun-400));
+
+  /* bordas/superfícies (fallbacks seguros) */
+  --_border: var(--color-border, rgba(17, 17, 17, 0.14));
+  --_surface-1: var(--color-surface-1, rgba(255, 255, 255, 0.70));
+  --_surface-2: var(--color-surface-2, rgba(255, 255, 255, 0.44));
+
+  /* Nature-like shadows (suaves) */
+  --_shadow: 0 10px 28px rgba(0, 0, 0, 0.10);
+  --_shadowHover: 0 14px 36px rgba(0, 0, 0, 0.16);
+
+  /* borda só no hover */
+  --_borderIdle: transparent;
+  --_borderHover: color-mix(in oklab, var(--pal-pri-600) 42%, transparent);
+
+  /* radius mais “reto” */
+  --_radiusNature: 6px;
+
+  /* azul claro suave (apenas apoio visual) */
+  --_softBlue: color-mix(in oklab, #a0d2ff 70%, white 30%);
+}
+
+html[data-theme="dark"] {
+  --_text: var(--color-text-primary, rgba(255, 255, 255, 0.92));
+  --_muted: var(--color-text-muted, rgba(255, 255, 255, 0.70));
+  --_link: var(--color-brand-primary, var(--pal-lav-050));
+  --_linkHover: var(--pal-sun-400);
+
+  --_border: var(--color-border, rgba(221, 214, 255, 0.18));
+  --_surface-1: var(--color-surface-1, rgba(255, 255, 255, 0.08));
+  --_surface-2: var(--color-surface-2, rgba(255, 255, 255, 0.12));
+
+  --_shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  --_shadowHover: 0 18px 44px rgba(0, 0, 0, 0.55);
+
+  --_borderIdle: transparent;
+  --_borderHover: color-mix(in oklab, var(--pal-lav-300) 42%, transparent);
+
+  --_softBlue: color-mix(in oklab, #a0d2ff 38%, transparent 62%);
 }
 
 /* Container editorial */
@@ -32,8 +73,11 @@
   padding: var(--_padMobile);
 
   font-size: var(--text-body, 16px);
-  line-height: var(--text-lineHeight-body, 1.65);
+  line-height: var(--text-lineHeight-body, 1.68);
   color: var(--_text);
+
+  /* leveza para TDAH */
+  text-wrap: pretty;
 }
 
 @media (min-width: 900px) {
@@ -49,9 +93,9 @@
 .prose h3 {
   font-family: var(--font-editorial, Georgia, serif);
   line-height: var(--text-lineHeight-tight, 1.15);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  font-weight: 650;
+  margin-top: 2.4rem;
+  margin-bottom: 0.9rem;
+  font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--_text);
 }
@@ -68,6 +112,18 @@
   font-size: clamp(1.15rem, 1.2vw, 1.35rem);
 }
 
+/* “Eyebrow” / small label (Nature-like) */
+.prose .kicker,
+.prose .eyebrow {
+  display: inline-block;
+  margin: 0 0 10px 0;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--_muted);
+}
+
 /* ===== Parágrafos ===== */
 
 .prose p {
@@ -75,17 +131,27 @@
   color: var(--_text);
 }
 
-/* ===== Links ===== */
+/* ritmo mais calmo */
+.prose p + p {
+  margin-top: -0.2em;
+}
 
+/* ===== Links ===== */
+/* regra: underline SÓ no hover */
 .prose a {
   color: var(--_link);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  transition: color 160ms ease, opacity 160ms ease;
+  text-decoration: none;
+
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+
+  transition: color 160ms ease, opacity 160ms ease, text-decoration-color 160ms ease;
+  font-weight: 650; /* links mais fortes que o texto */
 }
 
 .prose a:hover {
   color: var(--_linkHover);
+  text-decoration: underline;
 }
 
 .prose a:active {
@@ -98,39 +164,205 @@
 }
 
 /* ===== Blockquote ===== */
-
+/* Nature-like: caixa suave + sombra, borda só no hover */
 .prose blockquote {
-  border-left: 3px solid var(--_accent);
-  padding-left: 1rem;
-  margin: 2rem 0;
+  margin: 1.8rem 0;
+  padding: 14px 16px;
+
+  border-left: 0;
+  border: 1px solid var(--_borderIdle);
+  border-radius: var(--_radiusNature);
+
+  background: color-mix(in oklab, var(--_surface-1) 74%, white 26%);
+  box-shadow: var(--_shadow);
+
   color: var(--_muted);
   font-style: italic;
+
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+html[data-theme="dark"] .prose blockquote {
+  background: color-mix(in oklab, var(--_surface-2) 74%, black 26%);
+}
+
+.prose blockquote:hover {
+  border-color: var(--_borderHover);
+  box-shadow: var(--_shadowHover);
+  transform: translateY(-1px);
 }
 
 /* ===== Listas ===== */
-
+/* bullets no clima dos prints: limpos, espaçados, marcador suave */
 .prose ul,
 .prose ol {
-  margin: 1.5rem 0 1.5rem 1.5rem;
+  margin: 1.3rem 0 1.3rem 1.15rem;
   color: var(--_text);
+  padding-left: 0.2rem;
 }
 
 .prose li {
-  margin-bottom: 0.5rem;
+  margin: 0.45rem 0;
+}
+
+.prose ul li::marker {
+  color: color-mix(in oklab, var(--pal-pri-600) 55%, #000);
+}
+
+.prose ol li::marker {
+  color: color-mix(in oklab, var(--pal-pri-600) 55%, #000);
+  font-weight: 700;
+}
+
+/* “listas dentro de cards/caixas” continuam legíveis */
+.prose :where(blockquote, .callout, .card, .ds-card) ul,
+.prose :where(blockquote, .callout, .card, .ds-card) ol {
+  margin-left: 1.05rem;
 }
 
 /* ===== Imagens ===== */
-
+/* Nature-like: sombra + borda só no hover + radius reto */
 .prose img {
-  border-radius: 2px; /* Nature-like */
-  margin: 2rem 0;
-  border: 1px solid var(--_border, rgba(17, 17, 17, 0.14));
+  display: block;
+  max-width: 100%;
+  height: auto;
+
+  border-radius: 2px;
+  margin: 1.8rem 0;
+
+  border: 1px solid var(--_borderIdle);
+  box-shadow: var(--_shadow);
+
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.prose img:hover {
+  border-color: var(--_borderHover);
+  box-shadow: var(--_shadowHover);
+  transform: translateY(-1px);
 }
 
 /* ===== Separador ===== */
-
 .prose hr {
-  margin: 3rem 0;
+  margin: 2.4rem 0;
   border: none;
-  border-top: 1px solid var(--_border, rgba(17, 17, 17, 0.14));
+  border-top: 1px solid color-mix(in oklab, var(--_border) 55%, transparent 45%);
+}
+
+/* ===== Elementos editoriais comuns (Nature-like) ===== */
+
+/* Callout (se existir nos artigos) */
+.prose .callout {
+  margin: 1.6rem 0;
+  padding: 14px 16px;
+
+  border-radius: var(--_radiusNature);
+  border: 1px solid var(--_borderIdle);
+
+  background: color-mix(in oklab, var(--_surface-1) 70%, var(--_softBlue) 30%);
+  box-shadow: var(--_shadow);
+
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+html[data-theme="dark"] .prose .callout {
+  background: color-mix(in oklab, var(--_surface-2) 76%, var(--_softBlue) 24%);
+}
+
+.prose .callout:hover {
+  border-color: var(--_borderHover);
+  box-shadow: var(--_shadowHover);
+  transform: translateY(-1px);
+}
+
+/* Divisores/linhas editoriais */
+.prose .divider {
+  height: 1px;
+  background: color-mix(in oklab, var(--_border) 55%, transparent 45%);
+  margin: 1.8rem 0;
+}
+
+/* Tables (se aparecerem no conteúdo) */
+.prose table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.8rem 0;
+
+  border: 1px solid var(--_borderIdle);
+  border-radius: var(--_radiusNature);
+  overflow: hidden;
+
+  background: color-mix(in oklab, var(--_surface-1) 80%, white 20%);
+  box-shadow: var(--_shadow);
+
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+html[data-theme="dark"] .prose table {
+  background: color-mix(in oklab, var(--_surface-2) 78%, black 22%);
+}
+
+.prose table:hover {
+  border-color: var(--_borderHover);
+  box-shadow: var(--_shadowHover);
+}
+
+.prose th,
+.prose td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  font-weight: 750;
+  color: var(--_text);
+  background: color-mix(in oklab, var(--_surface-2) 62%, white 38%);
+}
+
+html[data-theme="dark"] .prose th {
+  background: color-mix(in oklab, var(--_surface-2) 78%, black 22%);
+}
+
+.prose tr + tr td {
+  border-top: 1px solid color-mix(in oklab, var(--_border) 50%, transparent 50%);
+}
+
+/* Code inline e blocos (se existirem) */
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.95em;
+  background: color-mix(in oklab, var(--_surface-2) 78%, transparent 22%);
+  padding: 0.12em 0.36em;
+  border-radius: 4px;
+}
+
+.prose pre {
+  margin: 1.6rem 0;
+  padding: 14px 16px;
+
+  border-radius: var(--_radiusNature);
+  border: 1px solid var(--_borderIdle);
+
+  background: color-mix(in oklab, var(--_surface-2) 86%, transparent 14%);
+  box-shadow: var(--_shadow);
+
+  overflow: auto;
+}
+
+.prose pre:hover {
+  border-color: var(--_borderHover);
+  box-shadow: var(--_shadowHover);
+}
+
+/* Acessibilidade: reduz movimento */
+@media (prefers-reduced-motion: reduce) {
+  .prose a,
+  .prose img,
+  .prose blockquote,
+  .prose .callout,
+  .prose table {
+    transition: none;
+  }
 }
