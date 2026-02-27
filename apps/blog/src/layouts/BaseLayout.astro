@@ -103,16 +103,6 @@ const {
         --menu-border: rgba(221, 214, 255, 0.16);
       }
 
-      /* ✅ Anti-scroll lateral de forma global (backup do global.css) */
-      html, body {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-      }
-      @supports (overflow: clip) {
-        html, body { overflow-x: clip; }
-      }
-
       /* ✅ ADD: fallback de fundo sem “matar” o global.css */
       html { background: var(--page-bg); }
 
@@ -137,6 +127,8 @@ const {
       .topbar nav.nav,
       .topbar .dropdown { overflow: visible; }
 
+      /* ✅ Ajuste: dá um respiro do conteúdo abaixo do header no mobile
+         (sem mexer em páginas, só adicionando margem suave ao main) */
       main.w-full.flex-1 { padding-top: 0 !important; }
       main.w-full.flex-1 > :first-child { margin-top: 0 !important; padding-top: 0 !important; }
 
@@ -150,9 +142,6 @@ const {
         justify-content: space-between;
         gap: 14px;
         overflow: visible;
-
-        /* ✅ evita overflow por conteúdo mínimo */
-        min-width: 0;
       }
 
       .brand {
@@ -165,9 +154,6 @@ const {
         font-size: 1.6rem;
         flex: 0 0 auto;
         line-height: 1;
-
-        /* ✅ evita overflow do texto */
-        max-width: 100%;
       }
 
       .topbar-inner .nav{
@@ -179,17 +165,14 @@ const {
         justify-content: flex-end;
         gap: 12px;
 
-        /* ✅ FIX: permitir wrap (para não cortar no mobile/tablet) */
+        /* ✅ FIX: permitir wrap (desktop mantém 1 linha na prática; mobile quebra) */
         flex-wrap: wrap;
 
         overflow: visible;
-        min-width: 0;
-        max-width: 100%;
       }
 
       .topbar-inner .nav .nav-link{
         white-space: nowrap;
-        max-width: 100%;
       }
 
       /* ✅ Base link/button style (padrão Nature-like) */
@@ -201,7 +184,6 @@ const {
 
         width: auto;
         min-width: 0;
-        max-width: 100%;
         white-space: nowrap;
 
         /* ✅ borda só no hover */
@@ -221,8 +203,8 @@ const {
           background var(--motion-normal) var(--motion-easing),
           border-color var(--motion-normal) var(--motion-easing),
           box-shadow var(--motion-normal) var(--motion-easing),
-          transform var(--motion-fast) var(--motion-easing);
-
+          transform var(--motion-fast) var(--motion-easing),
+          text-decoration-color var(--motion-normal) var(--motion-easing);
         -webkit-tap-highlight-color: transparent;
       }
 
@@ -258,7 +240,6 @@ const {
         padding: 0;
         border-radius: 0;
         overflow: visible;
-        min-width: 0;
       }
 
       .menu {
@@ -268,10 +249,11 @@ const {
         z-index: 999;
 
         min-width: 220px;
-        max-width: min(360px, calc(100vw - 24px)); /* ✅ nunca estoura tela */
         background: var(--menu-bg);
 
+        /* ✅ borda só no hover: no menu a borda pode existir porque é container */
         border: 1px solid var(--menu-border);
+
         border-radius: 10px;
         padding: 6px;
 
@@ -294,7 +276,8 @@ const {
 
         transition:
           background var(--motion-normal) var(--motion-easing),
-          border-color var(--motion-normal) var(--motion-easing);
+          border-color var(--motion-normal) var(--motion-easing),
+          text-decoration-color var(--motion-normal) var(--motion-easing);
       }
 
       .menu a:hover {
@@ -344,7 +327,7 @@ const {
           padding: 8px 12px;
         }
 
-        /* ✅ dropdown menu no mobile: centraliza e não sai da tela */
+        /* ✅ dropdown menu no mobile: limita largura e evita sair da tela */
         .menu {
           left: 50%;
           transform: translateX(-50%);
@@ -429,7 +412,7 @@ const {
 
     {!hideFooter && (
       <footer>
-        <div style="max-width: 980px; margin: 0 auto; padding: 28px 16px; font-size: .9rem; color: var(--color-text-secondary);">
+        <div style="max-width: var(--layout-containerMax); margin: 0 auto; padding: 28px 32px; font-size: .9rem; color: var(--color-text-secondary);">
           © {new Date().getFullYear()} VivaTDAH — Todos os direitos reservados
         </div>
       </footer>

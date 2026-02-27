@@ -11,7 +11,7 @@ export async function GET(context: any) {
 
   return rss({
     title: "VivaTDAH",
-    description: "ConteÃºdo informativo e acessÃ­vel sobre TDAH",
+    description: "Conteúdo informativo e acessível sobre TDAH",
     site: context.site,
     items: posts.map((p) => ({
       title: p.title,
@@ -21,3 +21,4 @@ export async function GET(context: any) {
     })),
   });
 }
+
