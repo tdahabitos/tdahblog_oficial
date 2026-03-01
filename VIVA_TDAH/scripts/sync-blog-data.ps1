@@ -2,26 +2,16 @@
   [string]$RepoRoot = (Resolve-Path ".").Path
 )
 
-$srcContent = Join-Path $RepoRoot "VIVA_TDAH\content"
-$srcPublic  = Join-Path $RepoRoot "VIVA_TDAH\public"
+$srcRoot = Join-Path $RepoRoot "VIVA_TDAH"
+$dstRoot = Join-Path $RepoRoot "apps\blog\_viva_tdah"
 
-$dstContent = Join-Path $RepoRoot "apps\blog\src\content"
-$dstPublic  = Join-Path $RepoRoot "apps\blog\public"
+Write-Host "Sync FULL: $srcRoot -> $dstRoot"
 
-Write-Host "Sync: $srcContent -> $dstContent"
-Write-Host "Sync: $srcPublic  -> $dstPublic"
+if (!(Test-Path $srcRoot)) { throw "Fonte não existe: $srcRoot" }
 
-if (!(Test-Path $srcContent)) { throw "Fonte não existe: $srcContent" }
-if (!(Test-Path $srcPublic))  { Write-Host "Aviso: fonte não existe: $srcPublic (pulando)"; }
+New-Item -ItemType Directory -Force $dstRoot | Out-Null
 
-New-Item -ItemType Directory -Force $dstContent | Out-Null
-New-Item -ItemType Directory -Force $dstPublic  | Out-Null
+# Espelha tudo (copia e apaga o que saiu da origem)
+robocopy $srcRoot $dstRoot /MIR /XD "node_modules" ".git" /NFL /NDL /NJH /NJS /NP | Out-Null
 
-# Espelha conteúdo (copia e apaga o que não existe mais na origem)
-robocopy $srcContent $dstContent /MIR /NFL /NDL /NJH /NJS /NP | Out-Null
-
-if (Test-Path $srcPublic) {
-  robocopy $srcPublic $dstPublic /MIR /NFL /NDL /NJH /NJS /NP | Out-Null
-}
-
-Write-Host "OK: sync concluído."
+Write-Host "OK: sync FULL concluído."
