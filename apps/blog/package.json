@@ -7,7 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "prebuild": "node ../VIVA_TDAH/scripts/sync-blog-data.mjs"
+    "prebuild": "node ./_viva_tdah/scripts/sync-blog-data.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.3.0",
