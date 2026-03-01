@@ -1,0 +1,80 @@
+# ============================================
+# TDAH.blog — Dark Terapêutico (override)
+# ============================================
+# Regra:
+# - não redefine primitives
+# - apenas semantic tokens
+# - pensado para leitura longa noturna
+# ============================================
+
+color:
+  semantic:
+
+    # Surfaces (nunca preto puro)
+    surface:
+      0: "#171514"   # fundo principal (carvão quente)
+      1: "#201D1B"   # cards
+      2: "#2A2624"   # blocos editoriais
+      3: "#3A3431"   # divisores/bordas
+
+    # Texto (nunca branco puro)
+    text:
+      primary: "#F2EEEA"
+      secondary: "#CFC8C2"
+      muted: "#A69E98"
+      inverse: "#171514"
+
+    # Brand (lavanda mais contida)
+    brand:
+      primary: "#A89CC8"
+      secondary: "#8C7DB6"
+      soft: "#6B5CA5"
+      whisper: "#2A2624"
+
+    # Bordas substituem sombras
+    border:
+      subtle: "#2A2624"
+      default: "#3A3431"
+      strong: "#4A4441"
+      focus: "#8C7DB6"
+
+    # Estados de UI (fundos suaves)
+    state:
+      hoverBg: "#2A2624"
+      activeBg: "#3A3431"
+      disabledBg: "#201D1B"
+      disabledText: "#8C8682"
+
+    # Semânticos mantêm matiz, reduzem brilho
+    semantic:
+      success: "#7BBFA2"
+      warning: "#C9A75A"
+      error: "#C77474"
+      info: "#7FA6C8"
+
+
+# ============================================
+# Shadows → viram bordas / overlays
+# ============================================
+
+shadow:
+  sm:
+    - "0 0 0 rgba(0,0,0,0)"
+  md:
+    - "0 0 0 rgba(0,0,0,0)"
+  lg:
+    - "0 0 0 rgba(0,0,0,0)"
+
+
+# ============================================
+# Motion (mantém igual)
+# ============================================
+
+motion:
+  duration:
+    fast: "120ms"
+    base: "160ms"
+    slow: "240ms"
+  easing:
+    out: "ease-out"
+    inOut: "ease-in-out"

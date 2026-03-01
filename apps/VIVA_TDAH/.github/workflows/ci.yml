@@ -1,0 +1,53 @@
+name: VivaTDAH Editorial CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+
+jobs:
+  validate-content:
+    name: Validate Editorial Content
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Garante que pwsh existe no runner (ubuntu-latest geralmente já tem,
+      # mas este step deixa explícito e previsível)
+      - name: Setup PowerShell
+        uses: PowerShell/PowerShell@v1
+
+      - name: Detect changed markdown files
+        shell: bash
+        run: |
+          echo "FILES=$(git diff --name-only HEAD~1 | grep '\.md$' || true)" >> "$GITHUB_ENV"
+
+      - name: Validate design tokens
+        shell: pwsh
+        run: |
+          Write-Host "Validating design tokens..."
+
+          # garante que tokens.css existe
+          if (!(Test-Path "tdahblog-design/03-tokens/tokens.css")) {
+            Write-Error "tokens.css not found"
+            exit 1
+          }
+
+          # falha se houver HEX hardcoded fora do tokens.css
+          $hex = Select-String -Path "tdahblog-design/**/*.css" -Pattern "#[0-9a-fA-F]{3,8}" |
+            Where-Object { $_.Path -notmatch "tokens\.css$" }
+
+          if ($hex) {
+            Write-Error "Hardcoded HEX found outside tokens.css"
+            $hex
+            exit 1
+          }
+
+          Write-Host "Design tokens OK"
+
+      - name: CI success
+        run: echo "✅ VivaTDAH content validation passed"
