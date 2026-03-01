@@ -1,20 +1,14 @@
 ﻿import fs from "node:fs";
 import path from "node:path";
 
-function ensureDir(p) {
-  fs.mkdirSync(p, { recursive: true });
-}
-
-function copyFileSync(src, dst) {
-  ensureDir(path.dirname(dst));
-  fs.copyFileSync(src, dst);
-}
+function ensureDir(p) { fs.mkdirSync(p, { recursive: true }); }
 
 function listAllFiles(dir) {
   const out = [];
   const stack = [dir];
   while (stack.length) {
     const cur = stack.pop();
+    if (!fs.existsSync(cur)) continue;
     const entries = fs.readdirSync(cur, { withFileTypes: true });
     for (const e of entries) {
       const full = path.join(cur, e.name);
@@ -36,7 +30,7 @@ function shouldSkip(rel) {
   );
 }
 
-function mirrorDir(src, dst) {
+function mergeCopy(src, dst) {
   if (!fs.existsSync(src)) {
     console.log("SKIP:", src, "(não existe)");
     return;
@@ -45,49 +39,25 @@ function mirrorDir(src, dst) {
 
   const srcFiles = listAllFiles(src)
     .map((f) => path.normalize(f))
-    .filter((f) => {
-      const rel = path.relative(src, f);
-      return !shouldSkip(rel);
-    });
+    .filter((f) => !shouldSkip(path.relative(src, f)));
 
-  // Copy/update
-  const dstSeen = new Set();
   for (const f of srcFiles) {
     const rel = path.relative(src, f);
     const out = path.join(dst, rel);
-    dstSeen.add(path.normalize(out));
-    copyFileSync(f, out);
-  }
-
-  // Delete files that no longer exist in src
-  const dstFiles = fs.existsSync(dst) ? listAllFiles(dst).map((f) => path.normalize(f)) : [];
-  for (const f of dstFiles) {
-    const rel = path.relative(dst, f);
-    if (shouldSkip(rel)) continue;
-    if (!dstSeen.has(f)) {
-      fs.unlinkSync(f);
-    }
+    ensureDir(path.dirname(out));
+    fs.copyFileSync(f, out);
   }
 
   console.log("OK:", src, "->", dst, `(${srcFiles.length} arquivos)`);
 }
 
-const repoRoot = process.cwd();
+const repoRoot = process.cwd(); // apps/blog
 
-const srcRoot = path.join(repoRoot, "VIVA_TDAH");
-const dstFull = path.join(repoRoot, "apps", "blog", "_viva_tdah");
+const srcRoot = path.join(repoRoot, "_viva_tdah");
+const dstContent = path.join(repoRoot, "src", "content");
+const dstPublic  = path.join(repoRoot, "public");
 
-const srcContent = path.join(srcRoot, "content");
-const dstContent = path.join(repoRoot, "apps", "blog", "src", "content");
-
-const srcPublic = path.join(srcRoot, "public");
-const dstPublic = path.join(repoRoot, "apps", "blog", "public");
-
-console.log("=== Sync FULL VIVA_TDAH (não público) ===");
-mirrorDir(srcRoot, dstFull);
-
-console.log("=== Sync BLOG content/public ===");
-mirrorDir(srcContent, dstContent);
-mirrorDir(srcPublic, dstPublic);
-
+console.log("=== Sync _viva_tdah -> blog (MERGE, sem apagar) ===");
+mergeCopy(path.join(srcRoot, "content"), dstContent);
+mergeCopy(path.join(srcRoot, "public"),  dstPublic);
 console.log("DONE.");
