@@ -1,8 +1,0 @@
-# Ignorar arquivos temporários de editor
-*.tmp
-*.bak
-*.swp
-
-# Ignorar exports locais
-*.pdf
-*.docx

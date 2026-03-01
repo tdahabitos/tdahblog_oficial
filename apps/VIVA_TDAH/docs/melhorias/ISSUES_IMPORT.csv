@@ -1,6 +1,0 @@
-id,tipo,descricao,prioridade,status
-1,Editorial,Falta schema único de metadata,Alta,Aberto
-2,Técnico,Validador não checa cluster e CTA,Alta,Aberto
-3,SEO,Internal linking não padronizado,Média,Aberto
-4,UX,Carga cognitiva não explícita,Média,Aberto
-5,Produto,RAG ainda não implementado,Baixa,Aberto
