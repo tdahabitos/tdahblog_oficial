@@ -1,10 +1,9 @@
-/* src/styles/tdahblog.css */
-/* Ponte: importa CSS que está em /public/assets/tdahblog */
+﻿/* src/styles/tdahblog.css */
+/* Ponte: importa CSS que estÃ¡ em /public/assets/tdahblog */
 
-@import url("/assets/tdahblog/tokens.css");
-@import url("/assets/tdahblog/tokens.dark.css");
-@import url("/assets/tdahblog/prose.css");
-@import url("/assets/tdahblog/global.css");
+@import "./tokens/tokens.css";
+@import "./tokens/tokens.dark.css";
+@import "./tokens/prose.css";
 .post-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -137,7 +136,7 @@
   font-size: .9rem;
   opacity: .9;
 }
-.ui-breadcrumbs__item::after { content: "›"; margin-left: 8px; opacity: .5; }
+.ui-breadcrumbs__item::after { content: "â€º"; margin-left: 8px; opacity: .5; }
 .ui-breadcrumbs__item:last-child::after { content: ""; }
 .ui-breadcrumbs__link { text-decoration: none; opacity: .9; }
 .ui-breadcrumbs__link:hover { text-decoration: underline; }
