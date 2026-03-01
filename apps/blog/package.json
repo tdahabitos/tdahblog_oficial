@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "prebuild": "powershell -ExecutionPolicy Bypass -File ../../VIVA_TDAH/scripts/sync-blog-data.ps1"
   },
   "dependencies": {
     "@astrojs/react": "^4.3.0",
